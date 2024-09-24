@@ -1,0 +1,21 @@
+1- Importações de estilos
+./assets/main.css: Esse arquivo é onde estão os estilos personalizados da aplicação. Você está importando o arquivo main.css para aplicar esses estilos globalmente.
+@tabler/core/dist/css/tabler.css: Esse arquivo vem do framework de design Tabler e provavelmente contém estilos pré-definidos usados na aplicação. O Tabler fornece componentes de interface de usuário com um design limpo.
+
+2- Importações do Vue e Pinia
+createApp: Função da API do Vue 3 que cria uma nova instância da aplicação Vue.
+createPinia: Função para criar uma instância da Pinia, que é a biblioteca para gerenciamento de estado (similar ao Vuex, mas mais simples e leve).
+
+3. Importação de Componentes e Roteador
+App.vue: Este é o componente raiz da aplicação, que normalmente contém a estrutura principal do layout e a lógica base da aplicação.
+router: Importa o roteador configurado no arquivo router.js ou router/index.js. Isso possibilita a navegação entre diferentes páginas ou componentes.
+
+4. Criação da Instância da Aplicação
+Aqui, você cria uma nova instância da aplicação Vue usando o componente App.vue como o ponto de entrada.
+
+5. Configuração de Plugins
+app.use(createPinia()): Registra a Pinia como o sistema de gerenciamento de estado para toda a aplicação.
+app.use(router): Registra o Vue Router, que será responsável pela navegação e gestão de rotas dentro da aplicação.
+
+6. Montagem da Aplicação
+Essa linha monta a aplicação Vue no elemento DOM com o id #app. Ou seja, o Vue vai controlar e renderizar a aplicação dentro desse elemento.
