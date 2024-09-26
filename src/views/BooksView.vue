@@ -2,7 +2,7 @@
 
     <span class="d-none d-sm-inline">
         <h1 style="text-align: center;">Books List</h1> &nbsp; &nbsp;
-        <a href="" class="btn btn-primary d-none d-sm-inline-block" id="criar">
+        <router-link to="/createBook" class="btn btn-primary d-none d-sm-inline-block" id="criar">
             <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24"
                 stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -10,7 +10,7 @@
                 <path d="M5 12l14 0" />
             </svg>
             Create Book
-        </a>
+        </router-link>
     </span>
 
     <div class="card" v-for="book in books" :key="book.id" style="width: 68rem;">
@@ -25,17 +25,23 @@
                             <p href="#" class="text-reset"><strong>First_Name: </strong> {{ book.title }}</p>
                         </td>
                         <td class="text-nowrap text-secondary">
-                            <strong> Author First_Name: </strong> {{ book.authorDetails['first_name'] }}, <strong> Author Last_Name: </strong> {{ book.authorDetails['last_name'] }},<strong> Genre: </strong>{{book.genre}}, <strong> Summary: </strong> {{ book.summary }},
+                            <strong> Author First_Name: </strong> {{ book.authorDetails['first_name'] }}, <strong>
+                                Author Last_Name: </strong> {{ book.authorDetails['last_name'] }},<strong> Genre:
+                            </strong>{{ book.genre }}, <strong> Summary: </strong> {{ book.summary }},
                             <strong> Isbn: </strong>{{ book.isbn }}
                         </td>
                         <td class="text-nowrap">
-                            <a href="" class="text-secondary">
-                                <strong> Update_Book </strong>
-                            </a>
+                            <router-link :to="{ name: 'updateAuthor', params: { id: book.id } }"
+                                class="btn btn-primary">
+                                Update Book
+                            </router-link>
                         </td>
                         <td class="text-nowrap">
-                            <a href="" class="text-secondary">
-                                <strong>Delete_Book </strong> </a>
+                            <form @submit.prevent="deleteBook(book.id)">
+                                <button type="submit" class="btn btn-danger">
+                                    Delete Book
+                                </button>
+                            </form>
                         </td>
                     </tr>
                 </tbody>
@@ -51,7 +57,8 @@ import { ref } from 'vue';
 const books = ref([])
 
 // Primeiro, busque os livros
-axios.get('http://127.0.0.1:8000/api/v1/books')
+const fetchAuthors = () => {
+    axios.get('http://127.0.0.1:8000/api/v1/books')
     .then(response => {
         books.value = response.data;
 
@@ -77,6 +84,44 @@ axios.get('http://127.0.0.1:8000/api/v1/books')
     .catch(error => {
         console.error(error.message);
     });
+};
+
+fetchAuthors();
+
+const deleteBook = (bookId) => {
+    console.log("Deleting author with ID:", bookId); // Verifique se o ID está correto
+    const confirmed = confirm("Are you sure you want to delete this author?");
+    if (confirmed) {
+        axios.delete(`http://127.0.0.1:8000/api/v1/books/${bookId}`)
+            .then(response => {
+                console.log('Autor deletado com sucesso!', response.data);
+                // Atualiza a lista de autores após deletar
+                fetchAuthors();
+            })
+            .catch(error => {
+                console.error('Erro ao deletar o autor:', error.response?.data || error.message);
+            });
+    }
+};
+
+/*
+const deleteAuthor = (authorId) => {
+    console.log("Deleting author with ID:", authorId); // Verifique se o ID está correto
+    const confirmed = confirm("Are you sure you want to delete this author?");
+    if (confirmed) {
+        axios.delete(`http://127.0.0.1:8000/api/v1/author/${authorId}`)
+            .then(response => {
+                console.log('Autor deletado com sucesso!', response.data);
+                // Atualiza a lista de autores após deletar
+                fetchAuthors();
+            })
+            .catch(error => {
+                console.error('Erro ao deletar o autor:', error.response?.data || error.message);
+            });
+    }
+};
+*/
+
 </script>
 
 <style>
@@ -86,7 +131,7 @@ axios.get('http://127.0.0.1:8000/api/v1/books')
     margin-top: 30px;
 }
 
-#criar{
+#criar {
     margin-left: 680px;
 }
 </style>
