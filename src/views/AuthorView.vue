@@ -1,5 +1,4 @@
 <template>
-
     <span class="d-none d-sm-inline" id="books">
         <h1 style="text-align: center;">Authors List</h1> &nbsp; &nbsp;
         <router-link to="/createAuthor" class="btn btn-primary d-none d-sm-inline-block" id="criar">
@@ -22,7 +21,8 @@
                     <tr>
                         <td class="w-100">
                             <p href="#" class="text-reset"><strong>First_Name: </strong> {{ author.first_name }}
-                                <strong>First_Name: </strong> {{ author.last_name }}</p>
+                                <strong>First_Name: </strong> {{ author.last_name }}
+                            </p>
                         </td>
                         <td class="text-nowrap">
                             <p href="#" class="text-secondary">
@@ -31,14 +31,19 @@
                             </p>
                         </td>
                         <td class="text-nowrap">
-                            <p href="#" class="text-secondary">
-                                <strong>Update_Author </strong>
-                            </p>
+                            <router-link
+                                :to="{ name: 'updateAuthor', params: { id: author.id } }"
+                                class="btn btn-primary"
+                            >
+                                Update Author
+                            </router-link>
                         </td>
                         <td class="text-nowrap">
-                            <p href="#" class="text-secondary">
-                                <strong>Delete_Author </strong>
-                            </p>
+                            <form @submit.prevent="deleteAuthor(author.id)">
+                                <button type="submit" class="btn btn-danger">
+                                    Delete Author
+                                </button>
+                            </form>
                         </td>
                     </tr>
                 </tbody>
@@ -54,7 +59,8 @@ import { ref } from 'vue';
 
 const authors = ref([])
 
-axios.get('http://127.0.0.1:8000/api/v1/author')
+const fetchAuthors = () => {
+    axios.get('http://127.0.0.1:8000/api/v1/author')
     .then(response => {
 
         authors.value = response.data
@@ -62,7 +68,27 @@ axios.get('http://127.0.0.1:8000/api/v1/author')
     })
     .catch(error => {
         console.error(error.message)
-    })
+    });
+};
+// Carregar autores quando o componente for criado
+fetchAuthors();
+
+// Função para deletar o autor
+const deleteAuthor = (authorId) => {
+    console.log("Deleting author with ID:", authorId); // Verifique se o ID está correto
+    const confirmed = confirm("Are you sure you want to delete this author?");
+    if (confirmed) {
+        axios.delete(`http://127.0.0.1:8000/api/v1/author/${authorId}`)
+            .then(response => {
+                console.log('Autor deletado com sucesso!', response.data);
+                // Atualiza a lista de autores após deletar
+                fetchAuthors();
+            })
+            .catch(error => {
+                console.error('Erro ao deletar o autor:', error.response?.data || error.message);
+            });
+    }
+};
 
 </script>
 
@@ -71,12 +97,12 @@ axios.get('http://127.0.0.1:8000/api/v1/author')
     margin-left: 500px;
 }
 
-#criar{
+#criar {
     margin-left: 680px;
     margin-top: 10px;
 }
 
-#books{
+#books {
     margin-left: 680px;
 }
 

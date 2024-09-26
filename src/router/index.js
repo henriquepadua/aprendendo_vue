@@ -33,6 +33,11 @@ const router = createRouter({
       path: '/createAuthor',
       name: 'createAuthor',
       component: () => import('@/views/CreateAuthorView.vue')
+    },
+    {
+      path: '/updateAuthor',
+      name: 'updateAuthor',
+      component: () => import('@/views/UpdateAuthorView.vue')
     }
   ]
 })
