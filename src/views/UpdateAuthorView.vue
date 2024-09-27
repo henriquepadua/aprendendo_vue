@@ -3,7 +3,7 @@
       <h1>Update Author</h1>
   
       <!-- Formulário para atualizar autor -->
-      <form @submit.prevent="updateAuthor">
+      <form @submit.prevent="updateAuthor(author.id)">
         <div>
           <label for="first_name">First Name:</label>
           <input v-model="author.first_name" id="first_name" required>
@@ -32,13 +32,16 @@
   <script setup>
   import { ref, onMounted } from 'vue';
   import axios from 'axios';
-  import { useRouter } from 'vue-router'; // Importar o Vue Router
+  import { useRouter, useRoute } from 'vue-router'; // Importar o Vue Router
 
+
+  const route = useRoute(); // Capturar os parâmetros da rota
   // Author ID que deseja atualizar (pode vir de um parâmetro de rota ou outra forma)
-  const authorId = 50; // Substitua pelo ID que você quer atualizar
+  const authorId = route.params.id;; // Substitua pelo ID que você quer atualizar
   
   // Dados do autor que serão atualizados
   const author = ref({
+    id: 0,
     first_name: '',
     last_name: '',
     date_of_birth: '',

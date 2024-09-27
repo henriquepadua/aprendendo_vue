@@ -19,3 +19,21 @@ app.use(router): Registra o Vue Router, que será responsável pela navegação 
 
 6. Montagem da Aplicação
 Essa linha monta a aplicação Vue no elemento DOM com o id #app. Ou seja, o Vue vai controlar e renderizar a aplicação dentro desse elemento.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Preciso buscar o valor do id do meu card "quando clicar em update_book" tenho que passar o id do meu livro como parametro e depois tenho que pegar esse valor e usar em uma rota na minha api 

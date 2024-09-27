@@ -53,6 +53,7 @@ const selectedGenres = ref([]);
 const selectAuthor = ref(0);
 
 const dados = ref({
+    id: 0,
     title: "",
     summary: "",
     isbn: "",
@@ -65,7 +66,10 @@ const authors = ref([]);
 const resposta = ref('');
 const router = useRouter();
 const route = useRoute();
-const bookId = route.params.id;  // Pegando o ID do livro da URL
+const bookId = route.params.id;  
+
+// Pegando o ID do livro da URL
+console.log(ref(route.params.id))
 
 // Função para carregar os dados do livro ao carregar a página
 onMounted(() => {
@@ -104,7 +108,7 @@ const updateBook = () => {
     dados.value.author = selectAuthor.value;
     dados.value.genre = selectedGenres.value;
 
-    axios.put(`http://127.0.0.1:8000/api/v1/books/${bookId}/`, dados.value)
+    axios.put(`http://127.0.0.1:8000/api/v1/books/${bookId}`, dados.value)
         .then(response => {
             console.log('Book updated successfully!', response.data);
             router.push('/books');  // Redirecionar para a página de lista de livros

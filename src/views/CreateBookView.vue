@@ -58,7 +58,7 @@ const selectedGenres = ref(0)
 const selectAuthor = ref(0)
 
 const dados = ref({
-    //id: "0",
+    id: "0",
     bookinstance_set: [],
     title: "",
     summary: "",

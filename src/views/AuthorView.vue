@@ -13,7 +13,7 @@
     </span>
     <div class="card" v-for="author in authors" :key="author.id" style="width: 58rem;">
         <div class="card-header">
-            <router-link class="card-title"><strong>Description_Book</strong></router-link>
+            <router-link class="card-title"><strong>Description_Author</strong></router-link>
         </div>
         <div class="table-responsive">
             <table class="table card-table table-vcenter">
@@ -31,10 +31,7 @@
                             </p>
                         </td>
                         <td class="text-nowrap">
-                            <router-link
-                                :to="{ name: 'updateAuthor', params: { id: author.id } }"
-                                class="btn btn-primary"
-                            >
+                            <router-link :to="`/updateAuthor/${author.id}`" class="btn btn-primary">
                                 Update Author
                             </router-link>
                         </td>
@@ -54,21 +51,23 @@
 </template>
 
 <script setup>
+import router from '@/router';
 import axios from 'axios';
 import { ref } from 'vue';
+
 
 const authors = ref([])
 
 const fetchAuthors = () => {
     axios.get('http://127.0.0.1:8000/api/v1/author')
-    .then(response => {
+        .then(response => {
 
-        authors.value = response.data
+            authors.value = response.data
 
-    })
-    .catch(error => {
-        console.error(error.message)
-    });
+        })
+        .catch(error => {
+            console.error(error.message)
+        });
 };
 // Carregar autores quando o componente for criado
 fetchAuthors();
@@ -76,18 +75,17 @@ fetchAuthors();
 // Função para deletar o autor
 const deleteAuthor = (authorId) => {
     console.log("Deleting author with ID:", authorId); // Verifique se o ID está correto
-    const confirmed = confirm("Are you sure you want to delete this author?");
-    if (confirmed) {
-        axios.delete(`http://127.0.0.1:8000/api/v1/author/${authorId}`)
-            .then(response => {
-                console.log('Autor deletado com sucesso!', response.data);
-                // Atualiza a lista de autores após deletar
-                fetchAuthors();
-            })
-            .catch(error => {
-                console.error('Erro ao deletar o autor:', error.response?.data || error.message);
-            });
-    }
+    axios.delete(`http://127.0.0.1:8000/api/v1/author/${authorId}`)
+        .then(response => {
+            console.log('Autor deletado com sucesso!', response.data);
+            authors.value = authors.value.filter(author => author.id !== authorId);
+
+            // Atualiza a lista de autores após deletar
+            fetchAuthors();
+        })
+        .catch(error => {
+            console.error('Erro ao deletar o autor:', error.response?.data || error.message);
+        });
 };
 
 </script>

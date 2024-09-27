@@ -1,5 +1,4 @@
 <template>
-
     <span class="d-none d-sm-inline">
         <h1 style="text-align: center;">Books List</h1> &nbsp; &nbsp;
         <router-link to="/createBook" class="btn btn-primary d-none d-sm-inline-block" id="criar">
@@ -13,7 +12,11 @@
         </router-link>
     </span>
 
-    <div class="card" v-for="book in books" :key="book.id" style="width: 68rem;">
+    <div v-if="books.length === 0">
+        <p style="text-align:center">Loading...</p>
+    </div>
+
+    <div v-else class="card" v-for="book in books" :key="book.id" style="width: 68rem;">
         <div class="card-header">
             <router-link class="card-title"><strong>Description_Book</strong></router-link>
         </div>
@@ -22,17 +25,17 @@
                 <tbody>
                     <tr>
                         <td class="w-100">
-                            <p href="#" class="text-reset"><strong>First_Name: </strong> {{ book.title }}</p>
+                            <p class="text-reset"><strong>Title: </strong> {{ book.title }}</p>
                         </td>
                         <td class="text-nowrap text-secondary">
-                            <strong> Author First_Name: </strong> {{ book.authorDetails['first_name'] }}, <strong>
-                                Author Last_Name: </strong> {{ book.authorDetails['last_name'] }},<strong> Genre:
-                            </strong>{{ book.genre }}, <strong> Summary: </strong> {{ book.summary }},
-                            <strong> Isbn: </strong>{{ book.isbn }}
+                            <strong> Author First Name: </strong> {{ book.authorDetails?.first_name || 'Loading...' }},
+                            <strong> Author Last Name: </strong> {{ book.authorDetails?.last_name || 'Loading...' }},
+                            <strong> Genre: </strong> {{ book.genre }},
+                            <strong> Summary: </strong> {{ book.summary }},
+                            <strong> Isbn: </strong> {{ book.isbn }}
                         </td>
                         <td class="text-nowrap">
-                            <router-link :to="{ name: 'updateBook', params: { id: book.id } }"
-                                class="btn btn-primary">
+                            <router-link :to="{ name: 'updateBook', params: { id: book.id } }" class="btn btn-primary">
                                 Update Book
                             </router-link>
                         </td>
@@ -90,18 +93,19 @@ fetchAuthors();
 
 const deleteBook = (bookId) => {
     console.log("Deleting author with ID:", bookId); // Verifique se o ID está correto
-    const confirmed = confirm("Are you sure you want to delete this author?");
-    if (confirmed) {
-        axios.delete(`http://127.0.0.1:8000/api/v1/books/${bookId}`)
-            .then(response => {
-                console.log('Autor deletado com sucesso!', response.data);
-                // Atualiza a lista de autores após deletar
-                fetchAuthors();
-            })
-            .catch(error => {
-                console.error('Erro ao deletar o autor:', error.response?.data || error.message);
-            });
-    }
+    // const confirmed = confirm("Are you sure you want to delete this author?");
+    // if (confirmed) {
+    axios.delete(`http://127.0.0.1:8000/api/v1/books/${bookId}`)
+        .then(response => {
+            console.log('Book deletado com sucesso!', response.data);
+            // Atualiza a lista de autores após deletar
+            books.value = books.value.filter(book => book.id !== bookId);
+            fetchAuthors();
+        })
+        .catch(error => {
+            console.error('Erro ao deletar o autor:', error.response?.data || error.message);
+        });
+    // }
 };
 
 /*
