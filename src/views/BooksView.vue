@@ -31,7 +31,7 @@
                             <strong> Isbn: </strong>{{ book.isbn }}
                         </td>
                         <td class="text-nowrap">
-                            <router-link :to="{ name: 'updateAuthor', params: { id: book.id } }"
+                            <router-link :to="{ name: 'updateBook', params: { id: book.id } }"
                                 class="btn btn-primary">
                                 Update Book
                             </router-link>

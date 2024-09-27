@@ -103,7 +103,7 @@ const createBook = () => {
 
             console.log('Book create sucessfull!', response.data);
             // Redirecionar para a página de lista de autores
-            router.push('/authors'); // Substitua '/authors' pelo caminho correto da sua rota
+            router.push('/books'); // Substitua '/authors' pelo caminho correto da sua rota
         })
         .catch(error => {
             responseMessage.value = 'Error updating author: ' + error.message;
