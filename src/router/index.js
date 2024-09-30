@@ -54,6 +54,16 @@ const router = createRouter({
       name: 'updateAuthor',
       component: () => import('@/views/UpdateAuthorView.vue')
     },
+    {
+      path: '/updateAuthor/:id',
+      name: 'updateAuthor',
+      component: () => import('@/views/UpdateAuthorView.vue')
+    },
+    {
+      path: '/tokens',   // Adiciona uma nova rota para os tokens
+      name: 'tokens',
+      component: () => import('@/views/TokenView.vue')  // Componente que exibirá os tokens
+    }
   ]
 })
 
