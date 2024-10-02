@@ -74,7 +74,7 @@ console.log(accessToken)
 const updateAuthor = () => {
   axios.put(`http://127.0.0.1:8000/api/v1/author/${authorId}`, author.value, {
     headers: {
-      'Authorization': `Bearer realm=${accessToken}`,  // Adiciona o token no cabeçalho
+      'Authorization': `Bearer ${accessToken}`,  // Adiciona o token no cabeçalho
       'Content-Type': 'application/json'   // Certifica-se que o tipo de conteúdo é JSON
     }
   })

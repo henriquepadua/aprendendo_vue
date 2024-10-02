@@ -22,6 +22,7 @@
 </template>
 
 <script>
+import { useRouter, useRoute } from 'vue-router';
 export default {
     data() {
         return {
@@ -37,7 +38,8 @@ export default {
     methods: {
         async login() {
             try {
-                
+                const router = useRouter();
+                const route = useRoute();
                 const response = await fetch('http://localhost:8000/api/v1/login/', {
                     method: 'POST',
                     headers: {
@@ -60,6 +62,8 @@ export default {
 
                 localStorage.setItem('access_token', data.access);
                 localStorage.setItem('refresh_token', data.refresh);
+                console.log("passie")
+                router.push('/books');
             } catch (error) {
                 this.error = 'Credenciais inválidas ou erro de servidor';
                 console.error('Erro:', error);
@@ -69,7 +73,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 #token {
     margin-left: 300px;
 }

@@ -1,3 +1,40 @@
+<!-- <h1>Title: {{ book.title }}</h1>
+
+  <p><strong>Author:</strong> <a href="{% url 'author_detail' pk=book.author.id %}">{{ book.author }}</a></p> 
+  <p><strong>Summary:</strong> {{ book.summary }}</p>
+  <p><strong>ISBN:</strong> {{ book.isbn }}</p>
+  <p><strong>Language:</strong> {{ book.language }}</p>
+  <p><strong>Genre:</strong> {% for genre in book.genre.all %} {{ genre }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+
+  <div style="margin-left:20px;margin-top:20px">
+    <h4>Copies</h4>
+    <a href="{% url 'bookinstance_create' %}" class="btn btn-primary d-none d-sm-inline-block" >CREATE_BOOK_INSTANCE<a/>
+
+    {% for copy in book.bookinstance_set.all %}
+      <hr>
+      <p class="{% if copy.status == 'a' %}text-success{% elif copy.status == 'm' %}text-danger{% else %}text-warning{% endif %}">{{ copy.get_status_display }}</p>
+      {% if copy.status != 'a' %}
+        <p><strong>Due to be returned:</strong> {{copy.due_back}}</p>
+      {% endif %}
+      <p><strong>Imprint:</strong> {{copy.imprint}}</p>
+      <p class="text-muted"><strong>Id:</strong> {{copy.id}}</p>
+      <table class="table card-table table-vcenter">
+        <tr>
+            <td class="text-nowrap">
+              <a href="{% url 'bookinstance_update' pk=copy.id %}" class="text-secondary">
+                <strong> Update_BookInstance</strong>
+              </a>
+            </td>
+            <td class="text-nowrap">
+              <a href="{% url 'bookinstance_delete' pk=copy.id %}" class="text-secondary">
+                <strong>Delete_BookInstance</strong> </a>
+            </td>
+          </tr>
+      </table>
+    {% endfor %}
+  </div>
+  <a href="{% url 'books' %}">Back to Books List</a> -->
+
 <template>
     <span class="d-none d-sm-inline">
         <h1 style="text-align: center;">Books List</h1> &nbsp; &nbsp;
@@ -18,7 +55,7 @@
 
     <div v-else class="card" v-for="book in books" :key="book.id" style="width: 68rem;">
         <div class="card-header">
-            <router-link class="card-title"><strong>Description_Book</strong></router-link>
+            <router-link :to="{ name: 'BookDetail', params: { id: book.id } }" class="card-title"><strong>Description_Book</strong></router-link>
         </div>
         <div class="table-responsive">
             <table class="table card-table table-vcenter">
