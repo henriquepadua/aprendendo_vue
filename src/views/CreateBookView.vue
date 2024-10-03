@@ -112,7 +112,7 @@ const createBook = () => {
 };
 </script>
 
-<style>
+<style scoped>
 #form {
     max-width: 600px;
     margin: 0 auto;

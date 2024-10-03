@@ -12,12 +12,6 @@
             </div>
             <button type="submit">Login</button>
         </form>
-
-        <div v-if="tokens.access" id="token">
-            <h2>Tokens JWT</h2>
-            <p><strong>Access Token:</strong> {{ tokens.access }}</p>
-            <p><strong>Refresh Token:</strong> {{ tokens.refresh }}</p>
-        </div>
     </div>
 </template>
 

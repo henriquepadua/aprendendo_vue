@@ -107,7 +107,7 @@ const updateAuthor = (bookId) => {
 
 </script>
 
-<style>
+<style scoped>
 #BookDetail{
     margin-left: 500px;
 }

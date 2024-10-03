@@ -90,7 +90,7 @@ const deleteAuthor = (authorId) => {
 
 </script>
 
-<style>
+<style scoped>
 #author {
     margin-left: 500px;
 }
