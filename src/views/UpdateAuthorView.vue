@@ -80,7 +80,7 @@ const updateAuthor = () => {
   })
   .then(response => {
     responseMessage.value = 'Author updated successfully!';
-    router.push('/authors'); // Substitua '/authors' pelo caminho correto da sua rota
+    router.push('/authors'); 
   })
   .catch(error => {
     responseMessage.value = 'Error updating author: ' + error.message;
