@@ -41,7 +41,7 @@
                 </div>
                 <div class="col">
                   <div class="font-weight-medium">
-                    Copies:
+                    Authors:
                   </div>
                   <div class="text-secondary">
                     {{ author.length }}

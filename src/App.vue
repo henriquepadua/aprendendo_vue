@@ -59,11 +59,14 @@
             <li class="nav-item">
               <router-link class="nav-link" to="/books"><span class="nav-link-icon d-md-none d-lg-inline-block">
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                    <path d="M5 12l-2 0l9 -9l9 9l-2 0"></path>
-                    <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
-                    <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="icon icon-tabler icons-tabler-outline icon-tabler-book">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M3 19a9 9 0 0 1 9 0a9 9 0 0 1 9 0" />
+                    <path d="M3 6a9 9 0 0 1 9 0a9 9 0 0 1 9 0" />
+                    <path d="M3 6l0 13" />
+                    <path d="M12 6l0 13" />
+                    <path d="M21 6l0 13" />
                   </svg>
                 </span>
                 <span class="nav-link-title">
@@ -73,18 +76,20 @@
             <li class="nav-item">
               <router-link class="nav-link" to="/authors"><span class="nav-link-icon d-md-none d-lg-inline-block">
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                    <path d="M5 12l-2 0l9 -9l9 9l-2 0"></path>
-                    <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
-                    <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="icon icon-tabler icons-tabler-outline icon-tabler-users">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
+                    <path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                    <path d="M21 21v-2a4 4 0 0 0 -3 -3.85" />
                   </svg>
                 </span>
                 <span class="nav-link-title">
                   Authors
                 </span></router-link>
             </li>
-            <li class="nav-item">
+            <!-- <li class="nav-item">
               <router-link class="nav-link" to="/bookinstance"><span class="nav-link-icon d-md-none d-lg-inline-block">
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
@@ -97,18 +102,12 @@
                 <span class="nav-link-title">
                   MyBorrowed
                 </span></router-link>
-            </li>
+            </li> -->
           </ul>
         </div>
       </div>
     </aside>
   </div>
-  <!-- Roteamento das páginas -->
-  <!-- <RouterLink to="/">Inicio</RouterLink> &nbsp; &nbsp;
-  <RouterLink to="/teste">Teste</RouterLink> &nbsp; &nbsp;
-  <RouterLink to="/authors">Authors</RouterLink> &nbsp; &nbsp;
-  <RouterLink to="/books">Books</RouterLink> &nbsp; &nbsp;
-  <RouterLink to="/bookinstance">instance</RouterLink> -->
 
   <RouterView />
 </template>
@@ -116,6 +115,6 @@
 
 <style>
 #layout {
-   /* margin-left: 500px;  */
+  /* margin-left: 500px;  */
 }
 </style>

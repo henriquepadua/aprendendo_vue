@@ -1,41 +1,3 @@
-<!-- <h1>Title: {{ book.title }}</h1>
-
-  <p><strong>Author:</strong> <a href="{% url 'author_detail' pk=book.author.id %}">{{ book.author }}</a></p> 
-  <p><strong>Summary:</strong> {{ book.summary }}</p>
-  <p><strong>ISBN:</strong> {{ book.isbn }}</p>
-  <p><strong>Language:</strong> {{ book.language }}</p>
-  <p><strong>Genre:</strong> {% for genre in book.genre.all %} {{ genre }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
-
-  <div style="margin-left:20px;margin-top:20px">
-    <h4>Copies</h4>
-    <a href="{% url 'bookinstance_create' %}" class="btn btn-primary d-none d-sm-inline-block" >CREATE_BOOK_INSTANCE<a/>
-
-    {% for copy in book.bookinstance_set.all %}
-      <hr>
-      <p class="{% if copy.status == 'a' %}text-success{% elif copy.status == 'm' %}text-danger{% else %}text-warning{% endif %}">{{ copy.get_status_display }}</p>
-      {% if copy.status != 'a' %}
-        <p><strong>Due to be returned:</strong> {{copy.due_back}}</p>
-      {% endif %}
-      <p><strong>Imprint:</strong> {{copy.imprint}}</p>
-      <p class="text-muted"><strong>Id:</strong> {{copy.id}}</p>
-      <table class="table card-table table-vcenter">
-        <tr>
-            <td class="text-nowrap">
-              <a href="{% url 'bookinstance_update' pk=copy.id %}" class="text-secondary">
-                <strong> Update_BookInstance</strong>
-              </a>
-            </td>
-            <td class="text-nowrap">
-              <a href="{% url 'bookinstance_delete' pk=copy.id %}" class="text-secondary">
-                <strong>Delete_BookInstance</strong> </a>
-            </td>
-          </tr>
-      </table>
-    {% endfor %}
-  </div>
-  <a href="{% url 'books' %}">Back to Books List</a> -->
-
-
 <template>
 
   <head>
@@ -69,27 +31,33 @@
     </div>
 
     <div id="copies" style="margin-left:20px;margin-top:20px">
-        <h4>Copies</h4>
-        {{ bookinstance }}
-      <div v-for="bookinstance in booksinstances" :key="bookinstance.id" >  
+      <router-link to="/createInstance" class="btn btn-primary" id="createinstance">
+                <strong> Create_BookInstance</strong>
+              </router-link>
+      <h4 style="padding:10px;">Copies</h4>
+      <div v-for="bookinstance in booksinstances" :key="bookinstance.id">
         <strong> imprint: </strong> {{ bookinstance.imprint }}, <strong> due_back:
         </strong>{{ bookinstance.due_back }}, <strong> status: </strong>{{ bookinstance.status }} ,
         <strong> borrower: </strong>{{ bookinstance.borrower }}
-        <h1 style="  padding: 20px;"></h1>
+        <h1 style="padding: 20px;"></h1>
         <table class="table card-table table-vcenter">
           <tr>
             <td class="text-nowrap">
-              <router-link to="" class="btn btn-primary">
+              <router-link :to="{ name: 'UpdateBookDetail', params: { id: bookinstance.id } }" class="btn btn-primary">
                 <strong> Update_BookInstance</strong>
               </router-link>
             </td>
             <td class="text-nowrap">
-              <router-link to="" class="btn btn-danger">
-                <strong>Delete_BookInstance</strong> </router-link>
+              <form @submit.prevent="deleteBookInstance(bookinstance.id)">
+                <button type="submit" class="btn btn-danger">
+                  Delete Book
+                </button>
+              </form>
             </td>
           </tr>
         </table>
-      </div>  
+        <h1 style="  padding: 20px;"></h1>
+      </div>
     </div>
   </main>
 </template>
@@ -99,7 +67,6 @@ import axios from 'axios';
 import { ref, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
-const selectedGenres = ref([]);
 
 const dados = ref({
   id: 0,
@@ -115,7 +82,6 @@ const authors = ref([]);
 const resposta = ref('');
 const route = useRoute();
 const bookId = route.params.id;
-const authorValue = ref([0])
 const booksinstances = ref([]);
 
 // Pegando o ID do livro da URL
@@ -123,7 +89,6 @@ const booksinstances = ref([]);
 
 onMounted(() => {
   const accessToken = localStorage.getItem('access_token');
-  const bookId = route.params.id;
   const selectAuthor = ref(0);
 
   axios.get(`http://127.0.0.1:8000/api/v1/books/${bookId}`)
@@ -133,7 +98,6 @@ onMounted(() => {
       dados.value.summary = book.summary;
       dados.value.isbn = book.isbn;
       selectAuthor.value = book.author;
-      selectedGenres.value = book.genre;
       axios.get(`http://127.0.0.1:8000/api/v1/author/${selectAuthor.value}`)
         .then(response => {
           authors.value = response.data;
@@ -168,11 +132,30 @@ onMounted(() => {
       console.error('Erro ao carregar o livro:', error.message);
     });
 });
+
+const deleteBookInstance = (bookinstanceID) => {
+  const accessToken = localStorage.getItem('access_token');
+  console.log("Deleting author with ID:", bookinstanceID); // Verifique se o ID está correto
+  axios.delete(`http://127.0.0.1:8000/api/v1/bookinstance/${bookinstanceID}`, {
+    headers: {
+      'Authorization': `Bearer ${accessToken}`,  // Adiciona o token no cabeçalho
+      'Content-Type': 'application/json'   // Certifica-se que o tipo de conteúdo é JSON
+    }
+  })
+    .then(response => {
+      console.log('Autor deletado com sucesso!', response.data);
+      booksinstances.value = booksinstances.value.filter(bookinstance => bookinstance.id !== bookinstanceID);
+
+      // Atualiza a lista de autores após deletar
+      fetchAuthors();
+    })
+    .catch(error => {
+      console.error('Erro ao deletar o autor:', error.response?.data || error.message);
+    });
+};
 </script>
 
 <style scoped>
-/* Estilos para o container principal */
-
 #copies {
   max-width: 600px;
   margin: 20px auto;
@@ -255,5 +238,8 @@ label:hover {
   p {
     font-size: 14px;
   }
+}
+#createinstance{
+  margin-left:140px;
 }
 </style>

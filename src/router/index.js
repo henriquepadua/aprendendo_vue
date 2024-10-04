@@ -55,11 +55,6 @@ const router = createRouter({
       component: () => import('@/views/UpdateAuthorView.vue')
     },
     {
-      path: '/updateAuthor/:id',
-      name: 'updateAuthor',
-      component: () => import('@/views/UpdateAuthorView.vue')
-    },
-    {
       path: '/login',   // Adiciona uma nova rota para os tokens
       name: 'tokens',
       component: () => import('@/views/TokenView.vue')  // Componente que exibirá os tokens
@@ -68,6 +63,16 @@ const router = createRouter({
       path: '/BookDetail/:id',
       name: 'BookDetail',
       component: () => import('@/views/BookDetailView.vue')
+    },
+    {
+      path: '/UpdateBookDetail/:id',
+      name: 'UpdateBookDetail',
+      component: () => import('@/views/UpdateBookInstanceView.vue')
+    },
+    {
+      path: '/createInstance',
+      name: 'createInstance',
+      component: () => import('@/views/CreateBookInstance.vue')
     },
   ]
 })

@@ -108,7 +108,7 @@ const updateBook = () => {
     dados.value.author = selectAuthor.value;
     dados.value.genre = selectedGenres.value;
 
-    axios.put(`http://127.0.0.1:8000/api/v1/books/${bookId}`, dados.value)
+    axios.put(`http://127.0.0.1:8000/api/v1/bookinstance/${bookId}`, dados.value)
         .then(response => {
             console.log('Book updated successfully!', response.data);
             router.push('/books');  // Redirecionar para a página de lista de livros
