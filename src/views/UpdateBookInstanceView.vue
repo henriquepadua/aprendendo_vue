@@ -6,10 +6,6 @@
 
         <form @submit.prevent="updateBookInstance(bookInstance.book)">
             <div>
-                <label for="Book">Book:</label>
-                <input v-model="bookInstance.book" id="book" required>
-            </div>
-            <div>
                 <label for="Imprint">Imprint:</label>
                 <input v-model="bookInstance.imprint" id="imprint" required>
             </div>
@@ -75,6 +71,9 @@ onMounted(() => {
     .catch(error => {
         console.error("Error fetching BookInstance: ", error.message);
     });
+
+
+    
 });
 
 console.log("Book:" + bookInstance.book)
