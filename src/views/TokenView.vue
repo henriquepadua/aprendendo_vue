@@ -53,6 +53,7 @@ export default {
 
                 const data = await response.json();
 
+                console.log(data);
                 this.tokens.access = data.access;
                 this.tokens.refresh = data.refresh;
 

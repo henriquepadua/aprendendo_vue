@@ -33,3 +33,6 @@ Essa linha monta a aplicação Vue no elemento DOM com o id #app. Ou seja, o Vue
 
 
 Preciso pegar os dados do meu livro emprestado e pegar o meu bookinstance.book para pegar o id do meu livro e assim trazer os dados do meu book
+
+Preciso pegar as informações que do usuario e verificar se está logado se estiver mostrar o usuario e mostrar a opção de logout,
+quando clicar em logout fazer 
