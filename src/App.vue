@@ -10,10 +10,10 @@
       <div class="container-fluid">
         <div class="navbar-brand navbar-brand-autodark">
           <!-- Verifica se o usuário está autenticado -->
-          <router-link to="/login">
+          <router-link to="/login" v-if="!authStore.isAuthenticated">
             Login
           </router-link>
-          <button @click="logout" class="btn btn-link">
+          <button  @click="logout" class="btn btn-link">
             Logout
           </button>
         </div>
@@ -102,76 +102,23 @@
   <RouterView />
 </template>
 
-<style>
-#layout {}
-</style>
-<script>
-import { useRouter, useRoute } from 'vue-router';
+<style></style>
+<script setup>
+import { useRouter } from 'vue-router';
 import { ref } from 'vue';
+import { useAuthStore } from './stores/auth'; // Importa o store de autenticação
+import { storeToRefs } from 'pinia';
 
-const isAuthenticated = ref(false);
-const router = useRouter();
+const authStore = useAuthStore();
+const { isAuthenticated } = storeToRefs(authStore); // Tornando a reatividade explícita
+const username = ref('');
+const password = ref('');
 
+const login = async () => {
+  await authStore.login(username.value, password.value);
+};
 
-export default {
-  data() {
-    return {
-      username: '',
-      password: '',
-      tokens: {
-        access: '',
-        refresh: '',
-      },
-      error: null
-    };
-  },
-  methods: {
-    async logout()  {
-      // Remover o token de acesso do localStorage
-      localStorage.removeItem('access_token');
-      localStorage.removeItem('refresh_token');
-      console.log("Usuário deslogado");
-
-      // Atualiza o estado de autenticação
-      isAuthenticated.value = false;
-
-      // Redireciona para a página de login
-      this.$router.push('/login');
-    },
-    async login() {
-      const router = useRouter(); // Usar o roteador
-      try {
-        const route = useRoute();
-        const response = await fetch('http://localhost:8000/api/v1/login/', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            username: this.username,
-            password: this.password
-          })
-        });
-
-        if (!response.ok) {
-          throw new Error('Erro ao fazer login');
-        }
-
-        const data = await response.json();
-
-        console.log(data);
-        this.tokens.access = data.access;
-        this.tokens.refresh = data.refresh;
-
-        localStorage.setItem('access_token', data.access);
-        localStorage.setItem('refresh_token', data.refresh);
-
-        this.$router.push('/');
-      } catch (error) {
-        this.error = 'Credenciais inválidas ou erro de servidor';
-        console.error('Erro:', error);
-      }
-    }
-  }
+const logout = async () => {
+  await authStore.logout();
 };
 </script>

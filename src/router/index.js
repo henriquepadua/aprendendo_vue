@@ -79,6 +79,11 @@ const router = createRouter({
       name: 'createInstance',
       component: () => import('@/views/CreateBookInstance.vue')
     },
+    {
+      path: '/testestore',
+      name: 'testestore',
+      component: () => import('@/views/TesteView.vue')
+    },
   ]
 })
 
