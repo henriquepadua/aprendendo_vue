@@ -67,7 +67,6 @@ export default {
                     window.location.reload(true); // força o recarregamento completo da página
                 });
 
-
             } catch (error) {
                 this.error = 'Credenciais inválidas ou erro de servidor';
                 console.error('Erro:', error);

@@ -24,9 +24,20 @@
                 </select>
             </div>
             <div>
+                <label for="borrower">Borrower:</label>
+                <select v-model="bookInstance.borrower" id="borrower" required>
+                    <option disabled value="">Select Users for Borrower</option>
+                    <!-- Aqui estamos usando v-for para iterar sobre a lista de usuários -->
+                    <option v-for="user in users" :key="user.id" :value="user.id">
+                        {{ user.username }}
+                    </option>
+                </select>
+
+            </div>
+            <!-- <div>
                 <label for="Borrower">Borrower:</label>
                 <input v-model="bookInstance.borrower" id="borrower">
-            </div>
+            </div> -->
 
             <button type="submit">Update BookInstance</button>
         </form>
@@ -57,23 +68,30 @@ const accessToken = localStorage.getItem('access_token');
 const route = useRoute();
 const router = useRouter();
 const bookInstanceId = route.params.id;
+const users = ref([]);
 
-onMounted(() => {
+onMounted(() => {    axios.get('http://localhost:8000/api/v1/User')
+        .then(response => {
+
+            users.value = response.data
+
+        })
+        .catch(error => {
+            console.error(error.message)
+        });
+
     axios.get(`http://127.0.0.1:8000/api/v1/bookinstance/${bookInstanceId}`, {
         headers: {
             'Authorization': `Bearer ${accessToken}`,
             'Content-Type': 'application/json'
         }
     })
-    .then(response => {
-        bookInstance.value = response.data;
-    })
-    .catch(error => {
-        console.error("Error fetching BookInstance: ", error.message);
-    });
-
-
-    
+        .then(response => {
+            bookInstance.value = response.data;
+        })
+        .catch(error => {
+            console.error("Error fetching BookInstance: ", error.message);
+        });
 });
 
 console.log("Book:" + bookInstance.book)
@@ -84,15 +102,15 @@ const updateBookInstance = (bookId) => {
             'Content-Type': 'application/json'
         }
     })
-    .then(response => {
-        console.log(response.data)
-        responseMessage.value = "BookInstance updated successfully!";
-        console.log(bookInstance.book)
-        router.push({ name: 'BookDetail', params: { id: bookId } });  // Redireciona após atualização
-    })
-    .catch(error => {
-        responseMessage.value = "Failed to update BookInstance: " + error.message;
-    });
+        .then(response => {
+            console.log(response.data)
+            responseMessage.value = "BookInstance updated successfully!";
+            console.log(bookInstance.book)
+            router.push({ name: 'BookDetail', params: { id: bookId } });  // Redireciona após atualização
+        })
+        .catch(error => {
+            responseMessage.value = "Failed to update BookInstance: " + error.message;
+        });
 };
 </script>
 
@@ -104,6 +122,7 @@ const updateBookInstance = (bookId) => {
     border: 1px solid #ccc;
     border-radius: 8px;
 }
+
 button {
     margin-top: 10px;
     padding: 10px 20px;
@@ -113,29 +132,36 @@ button {
     border-radius: 4px;
     cursor: pointer;
 }
+
 button:hover {
     background-color: #0056b3;
 }
+
 div {
     margin-bottom: 15px;
 }
+
 label {
     display: block;
     margin-bottom: 5px;
     font-weight: bold;
 }
-input, select {
+
+input,
+select {
     width: 100%;
     padding: 8px;
     box-sizing: border-box;
     border: 1px solid #ccc;
     border-radius: 4px;
 }
+
 .card {
     max-width: 10000px;
     margin-left: 300px;
     margin-top: 30px;
 }
+
 /* 
 h1 {
     margin-left: 20px;

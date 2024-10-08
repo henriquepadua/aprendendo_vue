@@ -31,7 +31,7 @@
     </div>
 
     <div id="copies" style="margin-left:20px;margin-top:20px">
-      <router-link to="/createInstance" class="btn btn-primary" id="createinstance">
+      <router-link to="/createInstance" class="btn btn-primary" id="createInstance">
                 <strong> Create_BookInstance</strong>
               </router-link>
       <h4 style="padding:10px;">Copies</h4>
