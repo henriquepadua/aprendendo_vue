@@ -1,4 +1,4 @@
-<script setup>
+<!-- <script setup>
 import { mapActions, storeToRefs } from 'pinia';
 import { useMainStore } from '../stores/auth';
 
@@ -12,7 +12,7 @@ const {increment} = mapActions(useMainStore,["increment"]);
 <template>
     <div id="dados">
       <p>Contador: {{ counter }}</p>
-      <!-- <p>Contador dobrado: {{ doubleCount }}</p> -->
+       <p>Contador dobrado: {{ doubleCount }}</p> 
       <button @click="increment">Incrementar</button>
     </div>
 </template>
@@ -21,4 +21,4 @@ const {increment} = mapActions(useMainStore,["increment"]);
 #dados{
     margin-left: 500px;
 }
-</style>
+</style> -->

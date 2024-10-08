@@ -15,7 +15,8 @@
     </div>
 </template>
 
-<script >
+<script>
+
 import { useRouter, useRoute } from 'vue-router';
 export default {
     data() {
@@ -30,7 +31,7 @@ export default {
         };
     },
     methods: {
-        
+
         async login() {
             const router = useRouter(); // Usar o roteador
             console.log("rota" + router)
@@ -60,7 +61,13 @@ export default {
                 localStorage.setItem('access_token', data.access);
                 localStorage.setItem('refresh_token', data.refresh);
 
-                this.$router.push('/');
+
+                this.$router.push("/").then(() => {
+                    // Recarrega a página após a navegação ser concluída
+                    window.location.reload(true); // força o recarregamento completo da página
+                });
+
+
             } catch (error) {
                 this.error = 'Credenciais inválidas ou erro de servidor';
                 console.error('Erro:', error);
