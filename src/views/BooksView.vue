@@ -18,7 +18,8 @@
 
     <div v-else class="card" v-for="book in books" :key="book.id" style="width: 68rem;">
         <div class="card-header">
-            <router-link :to="{ name: 'BookDetail', params: { id: book.id } }" class="card-title"><strong>Description_Book</strong></router-link>
+            <router-link :to="{ name: 'BookDetail', params: { id: book.id } }"
+                class="card-title"><strong>Description_Book</strong></router-link>
         </div>
         <div class="table-responsive">
             <table class="table card-table table-vcenter">
@@ -58,35 +59,46 @@ import axios from 'axios';
 import { ref } from 'vue';
 
 const books = ref([])
+const accessToken = localStorage.getItem('access_token');
 
 // Primeiro, busque os livros
 const fetchAuthors = () => {
-    axios.get('http://127.0.0.1:8000/api/v1/books')
-    .then(response => {
-        books.value = response.data;
+    axios.get('http://127.0.0.1:8000/api/v1/books', {
+        headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(response => {
+            books.value = response.data;
 
-        // Agora, crie uma lista de promessas para buscar os autores de cada livro
-        const authorPromises = books.value.map(book => {
-            return axios.get(`http://127.0.0.1:8000/api/v1/author/${book.author}`)
-                .then(authorResponse => {
-                    // Atribuir o nome do autor ao livro correto
-                    book.authorDetails = {
-                        first_name: authorResponse.data.first_name,
-                        last_name: authorResponse.data.last_name
-                    };
-                });
+            // Agora, crie uma lista de promessas para buscar os autores de cada livro
+            const authorPromises = books.value.map(book => {
+                return axios.get(`http://127.0.0.1:8000/api/v1/author/${book.author}`, {
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`,
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(authorResponse => {
+                        // Atribuir o nome do autor ao livro correto
+                        book.authorDetails = {
+                            first_name: authorResponse.data.first_name,
+                            last_name: authorResponse.data.last_name
+                        };
+                    });
+            });
+
+            // Aguarde todas as requisições de autores serem concluídas
+            return Promise.all(authorPromises);
+        })
+        .then(() => {
+            // Após todas as promessas resolvidas, os dados estão completos
+            console.log(books.value);
+        })
+        .catch(error => {
+            console.error(error.message);
         });
-
-        // Aguarde todas as requisições de autores serem concluídas
-        return Promise.all(authorPromises);
-    })
-    .then(() => {
-        // Após todas as promessas resolvidas, os dados estão completos
-        console.log(books.value);
-    })
-    .catch(error => {
-        console.error(error.message);
-    });
 };
 
 fetchAuthors();
@@ -95,7 +107,12 @@ const deleteBook = (bookId) => {
     console.log("Deleting author with ID:", bookId); // Verifique se o ID está correto
     // const confirmed = confirm("Are you sure you want to delete this author?");
     // if (confirmed) {
-    axios.delete(`http://127.0.0.1:8000/api/v1/books/${bookId}`)
+    axios.delete(`http://127.0.0.1:8000/api/v1/books/${bookId}`, {
+        headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+        }
+    })
         .then(response => {
             console.log('Book deletado com sucesso!', response.data);
             // Atualiza a lista de autores após deletar

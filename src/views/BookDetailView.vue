@@ -31,9 +31,9 @@
     </div>
 
     <div id="copies" style="margin-left:20px;margin-top:20px">
-      <router-link :to="{ name: 'createInstance', params: { id: dados.id } }" class="btn btn-primary" id="createInstance">
-                <strong> Create_BookInstance</strong>
-              </router-link>
+      <router-link to="/createInstance" class="btn btn-primary" id="createInstance">
+        <strong> Create_BookInstance</strong>
+      </router-link>
       <h4 style="padding:10px;">Copies</h4>
       <div v-for="bookinstance in booksinstances" :key="bookinstance.id">
         <strong> imprint: </strong> {{ bookinstance.imprint }}, <strong> due_back:
@@ -43,8 +43,7 @@
         <table class="table card-table table-vcenter">
           <tr>
             <td class="text-nowrap">
-              {{  bookinstance.book }}
-              <router-link :to="{ name: 'UpdateBookDetail', params: { id: bookinstance.id} }" class="btn btn-primary">
+              <router-link :to="{ name: 'UpdateBookDetail', params: { id: bookinstance.id } }" class="btn btn-primary">
                 <strong> Update_BookInstance</strong>
               </router-link>
             </td>
@@ -60,6 +59,7 @@
         <h1 style="  padding: 20px;"></h1>
       </div>
     </div>
+
   </main>
 </template>
 
@@ -75,7 +75,10 @@ const dados = ref({
   summary: "",
   isbn: "",
   author: 0,
-  genre: []
+  genre: [],
+  bookinstance_set: [
+
+  ]
 });
 
 const genres = ref([]);
@@ -85,22 +88,26 @@ const route = useRoute();
 const bookId = route.params.id;
 const booksinstances = ref([]);
 
-// Pegando o ID do livro da URL
-//console.log(ref(route.params.id))
-
 onMounted(() => {
   const accessToken = localStorage.getItem('access_token');
   const selectAuthor = ref(0);
 
-  axios.get(`http://127.0.0.1:8000/api/v1/books/${bookId}`)
+  axios.get(`http://127.0.0.1:8000/api/v1/books/${bookId}`, {
+    headers: {
+      'Authorization': `Bearer ${accessToken}`,
+      'Content-Type': 'application/json'
+    }
+  })
     .then(response => {
       const book = response.data;
+      console.log(book)
       dados.value.id = book.id;
-      localStorage.setItem('bookID', book.id);
+      booksinstances.value = book.bookinstance_set;
       dados.value.title = book.title;
       dados.value.summary = book.summary;
       dados.value.isbn = book.isbn;
       selectAuthor.value = book.author;
+
       axios.get(`http://127.0.0.1:8000/api/v1/author/${selectAuthor.value}`)
         .then(response => {
           authors.value = response.data;
@@ -119,20 +126,6 @@ onMounted(() => {
     })
     .catch(error => {
       console.error(error.message);
-    });
-
-  axios.get('http://127.0.0.1:8000/api/v1/bookinstance', {
-    headers: {
-      'Authorization': `Bearer ${accessToken}`,  // Adiciona o token no cabeçalho
-      'Content-Type': 'application/json'   // Certifica-se que o tipo de conteúdo é JSON
-    }
-  })
-    .then(response => {
-      booksinstances.value = response.data
-      console.log("fdsfsdfsdfsd"+ booksinstances.value)
-    })
-    .catch(error => {
-      console.error('Erro ao carregar o livro:', error.message);
     });
 });
 
@@ -242,7 +235,8 @@ label:hover {
     font-size: 14px;
   }
 }
-#createinstance{
-  margin-left:140px;
+
+#createinstance {
+  margin-left: 140px;
 }
 </style>
