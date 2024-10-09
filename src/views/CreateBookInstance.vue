@@ -50,7 +50,7 @@
 
 <script setup>
 import axios from 'axios';
-import { ref } from 'vue';
+import { ref,onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
 const dados = ref({
@@ -64,14 +64,9 @@ const resposta = ref('');
 const router = useRouter();
 
 const users = ref([]);
-const accessToken = localStorage.getItem('access_token');
 
-axios.get('http://localhost:8000/api/v1/user', {
-  headers: {
-    'Authorization': `Bearer ${accessToken}`,
-    'Content-Type': 'application/json'
-  }
-})
+
+axios.get('http://localhost:8000/api/v1/User')
   .then(response => {
 
     users.value = response.data
@@ -80,7 +75,7 @@ axios.get('http://localhost:8000/api/v1/user', {
   .catch(error => {
     console.error(error.message)
   });
-
+})
 const createBookInstance = () => {
   const bookId = localStorage.getItem('bookID');
 
