@@ -75,11 +75,6 @@ const router = createRouter({
       component: () => import('@/views/CreateBookInstance.vue')
     },
     {
-      path: '/logout',
-      name: 'createInstance',
-      component: () => import('@/views/CreateBookInstance.vue')
-    },
-    {
       path: '/testestore',
       name: 'testestore',
       component: () => import('@/views/TesteView.vue')

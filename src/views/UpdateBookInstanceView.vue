@@ -4,7 +4,7 @@
             <h1>Update BookInstance</h1>
         </div>
 
-        <form @submit.prevent="updateBookInstance(bookInstance.book)">
+        <form @submit.prevent="updateBookInstance()">
             <div>
                 <label for="Imprint">Imprint:</label>
                 <input v-model="bookInstance.imprint" id="imprint" required>
@@ -32,7 +32,6 @@
                         {{ user.username }}
                     </option>
                 </select>
-
             </div>
             <!-- <div>
                 <label for="Borrower">Borrower:</label>
@@ -70,15 +69,21 @@ const router = useRouter();
 const bookInstanceId = route.params.id;
 const users = ref([]);
 
-onMounted(() => {    axios.get('http://localhost:8000/api/v1/User')
-        .then(response => {
+onMounted(() => {
+    axios.get('http://localhost:8000/api/v1/user', {
+        headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => {
 
-            users.value = response.data
+        users.value = response.data
 
-        })
-        .catch(error => {
-            console.error(error.message)
-        });
+    })
+    .catch(error => {
+        console.error(error.message)
+    });
 
     axios.get(`http://127.0.0.1:8000/api/v1/bookinstance/${bookInstanceId}`, {
         headers: {
@@ -96,6 +101,8 @@ onMounted(() => {    axios.get('http://localhost:8000/api/v1/User')
 
 console.log("Book:" + bookInstance.book)
 const updateBookInstance = (bookId) => {
+    const bookdetaliId = localStorage.getItem('bookID');
+
     axios.put(`http://127.0.0.1:8000/api/v1/bookinstance/${bookInstanceId}`, bookInstance.value, {
         headers: {
             'Authorization': `Bearer ${accessToken}`,
@@ -106,7 +113,7 @@ const updateBookInstance = (bookId) => {
             console.log(response.data)
             responseMessage.value = "BookInstance updated successfully!";
             console.log(bookInstance.book)
-            router.push({ name: 'BookDetail', params: { id: bookId } });  // Redireciona após atualização
+            router.push({ name: 'BookDetail', params: { id: bookdetaliId } });  // Redireciona após atualização
         })
         .catch(error => {
             responseMessage.value = "Failed to update BookInstance: " + error.message;

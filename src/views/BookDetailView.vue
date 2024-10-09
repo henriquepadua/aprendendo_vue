@@ -31,7 +31,7 @@
     </div>
 
     <div id="copies" style="margin-left:20px;margin-top:20px">
-      <router-link to="/createInstance" class="btn btn-primary" id="createInstance">
+      <router-link :to="{ name: 'createInstance', params: { id: dados.id } }" class="btn btn-primary" id="createInstance">
                 <strong> Create_BookInstance</strong>
               </router-link>
       <h4 style="padding:10px;">Copies</h4>
@@ -43,7 +43,8 @@
         <table class="table card-table table-vcenter">
           <tr>
             <td class="text-nowrap">
-              <router-link :to="{ name: 'UpdateBookDetail', params: { id: bookinstance.id } }" class="btn btn-primary">
+              {{  bookinstance.book }}
+              <router-link :to="{ name: 'UpdateBookDetail', params: { id: bookinstance.id} }" class="btn btn-primary">
                 <strong> Update_BookInstance</strong>
               </router-link>
             </td>
@@ -94,6 +95,8 @@ onMounted(() => {
   axios.get(`http://127.0.0.1:8000/api/v1/books/${bookId}`)
     .then(response => {
       const book = response.data;
+      dados.value.id = book.id;
+      localStorage.setItem('bookID', book.id);
       dados.value.title = book.title;
       dados.value.summary = book.summary;
       dados.value.isbn = book.isbn;
@@ -126,7 +129,7 @@ onMounted(() => {
   })
     .then(response => {
       booksinstances.value = response.data
-
+      console.log("fdsfsdfsdfsd"+ booksinstances.value)
     })
     .catch(error => {
       console.error('Erro ao carregar o livro:', error.message);

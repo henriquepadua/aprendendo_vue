@@ -13,17 +13,13 @@
     </span>
     <div class="card" v-for="author in authors" :key="author.id" style="width: 58rem;">
         <div class="card-header">
-            <router-link class="card-title"><strong>Description_Author</strong></router-link>
-        </div>
+            <p href="#" class="text-reset"><strong>First_Name: </strong> {{ author.first_name }}
+                                <strong>First_Name: </strong> {{ author.last_name }}
+                            </p>        </div>
         <div class="table-responsive">
             <table class="table card-table table-vcenter">
                 <tbody>
                     <tr>
-                        <td class="w-100">
-                            <p href="#" class="text-reset"><strong>First_Name: </strong> {{ author.first_name }}
-                                <strong>First_Name: </strong> {{ author.last_name }}
-                            </p>
-                        </td>
                         <td class="text-nowrap">
                             <p href="#" class="text-secondary">
                                 <strong>Date_of_Birth: </strong> {{ author.date_of_birth }} <strong>Date_Of_Death:
