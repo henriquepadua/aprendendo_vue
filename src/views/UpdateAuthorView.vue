@@ -53,7 +53,12 @@ const responseMessage = ref('');
 
 // Função para buscar o autor existente ao carregar a página
 const fetchAuthor = () => {
-  axios.get(`http://127.0.0.1:8000/api/v1/author/${authorId}`)
+  axios.get(`http://127.0.0.1:8000/api/v1/author/${authorId}`, {
+        headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+        }
+    })
     .then(response => {
       // Preenche o formulário com os dados do autor existente
       author.value = response.data;

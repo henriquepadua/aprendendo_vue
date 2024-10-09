@@ -72,8 +72,14 @@ const router = useRouter(); // Usar o roteador
 const genres = ref([])
 
 const authors = ref([])
+const accessToken = localStorage.getItem('access_token');
 
-axios.get('http://127.0.0.1:8000/api/v1/author')
+axios.get('http://127.0.0.1:8000/api/v1/author', {
+    headers: {
+      'Authorization': `Bearer ${accessToken}`,  // Adiciona o token no cabeçalho
+      'Content-Type': 'application/json'   // Certifica-se que o tipo de conteúdo é JSON
+    }
+  })
     .then(response => {
 
         authors.value = response.data
@@ -83,7 +89,12 @@ axios.get('http://127.0.0.1:8000/api/v1/author')
         console.error(error.message)
     });
 
-axios.get('http://127.0.0.1:8000/api/v1/genre')
+axios.get('http://127.0.0.1:8000/api/v1/genre', {
+    headers: {
+      'Authorization': `Bearer ${accessToken}`,  // Adiciona o token no cabeçalho
+      'Content-Type': 'application/json'   // Certifica-se que o tipo de conteúdo é JSON
+    }
+  })
     .then(response => {
 
         genres.value = response.data
@@ -98,7 +109,12 @@ const createBook = () => {
     dados.value.author = selectAuthor.value
     console.log(selectedGenres.value)
     dados.value.genre = selectedGenres.value
-    axios.post('http://127.0.0.1:8000/api/v1/books', dados.value)
+    axios.post('http://127.0.0.1:8000/api/v1/books', dados.value, {
+    headers: {
+      'Authorization': `Bearer ${accessToken}`,  // Adiciona o token no cabeçalho
+      'Content-Type': 'application/json'   // Certifica-se que o tipo de conteúdo é JSON
+    }
+  })
         .then(response => {
 
             console.log('Book create sucessfull!', response.data);

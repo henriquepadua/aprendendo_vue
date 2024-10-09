@@ -51,7 +51,12 @@
   
   // Função para criar um autor
   const createAuthor = () => {
-    axios.post('http://127.0.0.1:8000/api/v1/author', dados.value)
+    axios.post('http://127.0.0.1:8000/api/v1/author', dados.value, {
+    headers: {
+      'Authorization': `Bearer ${accessToken}`,  // Adiciona o token no cabeçalho
+      'Content-Type': 'application/json'   // Certifica-se que o tipo de conteúdo é JSON
+    }
+  })
       .then(response => {
         console.log('Autor criado com sucesso!', response.data);
         // Redirecionar para a página de lista de autores

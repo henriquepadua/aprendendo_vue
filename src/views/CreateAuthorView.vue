@@ -49,10 +49,16 @@ const dados = ref({
 });
 
 const router = useRouter(); // Usar o roteador
+const accessToken = localStorage.getItem('access_token');
 
 // Função para criar um autor
 const createAuthor = () => {
-  axios.post('http://127.0.0.1:8000/api/v1/author', dados.value)
+  axios.post('http://127.0.0.1:8000/api/v1/author', dados.value, {
+        headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+        }
+    })
     .then(response => {
       console.log('Autor criado com sucesso!', response.data);
       // Redirecionar para a página de lista de autores

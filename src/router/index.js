@@ -1,6 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 
+const isAuthenticated = () => {
+  const token = localStorage.getItem('access_token');
+  return !!token;  // Retorna verdadeiro se o token existir, falso caso contrário
+}
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -82,6 +87,16 @@ const router = createRouter({
   ]
 })
 
+router.beforeEach(async (to, from, next) => {
+  const token = localStorage.getItem('access_token');
 
+  // Verifica se o token existe e se a rota não é de login
+  if (!token && to.name !== 'tokens') {
+    return next({ name: 'tokens' });  // Redireciona para a página de login
+  }
+
+  // Permite continuar com a navegação
+  next();
+})
 
 export default router

@@ -102,13 +102,19 @@ onMounted(() => {
       const book = response.data;
       console.log(book)
       dados.value.id = book.id;
+      localStorage.setItem('bookID',book.id);
       booksinstances.value = book.bookinstance_set;
       dados.value.title = book.title;
       dados.value.summary = book.summary;
       dados.value.isbn = book.isbn;
       selectAuthor.value = book.author;
 
-      axios.get(`http://127.0.0.1:8000/api/v1/author/${selectAuthor.value}`)
+      axios.get(`http://127.0.0.1:8000/api/v1/author/${selectAuthor.value}`, {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,  // Adiciona o token no cabeçalho
+          'Content-Type': 'application/json'   // Certifica-se que o tipo de conteúdo é JSON
+        }
+      })
         .then(response => {
           authors.value = response.data;
         })
@@ -120,7 +126,12 @@ onMounted(() => {
       console.error('Erro ao carregar o livro:', error.message);
     });
 
-  axios.get('http://127.0.0.1:8000/api/v1/genre')
+  axios.get('http://127.0.0.1:8000/api/v1/genre', {
+    headers: {
+      'Authorization': `Bearer ${accessToken}`,  // Adiciona o token no cabeçalho
+      'Content-Type': 'application/json'   // Certifica-se que o tipo de conteúdo é JSON
+    }
+  })
     .then(response => {
       genres.value = response.data;
     })

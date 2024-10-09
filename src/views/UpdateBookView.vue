@@ -70,10 +70,16 @@ const bookId = route.params.id;
 
 // Pegando o ID do livro da URL
 console.log(ref(route.params.id))
+const accessToken = localStorage.getItem('access_token');
 
 // Função para carregar os dados do livro ao carregar a página
 onMounted(() => {
-    axios.get(`http://127.0.0.1:8000/api/v1/books/${bookId}`)
+    axios.get(`http://127.0.0.1:8000/api/v1/books/${bookId}`, {
+    headers: {
+      'Authorization': `Bearer ${accessToken}`,  // Adiciona o token no cabeçalho
+      'Content-Type': 'application/json'   // Certifica-se que o tipo de conteúdo é JSON
+    }
+  })
         .then(response => {
             const book = response.data;
             dados.value.title = book.title;
@@ -86,7 +92,12 @@ onMounted(() => {
             console.error('Erro ao carregar o livro:', error.message);
         });
 
-    axios.get('http://127.0.0.1:8000/api/v1/author')
+    axios.get('http://127.0.0.1:8000/api/v1/author', {
+    headers: {
+      'Authorization': `Bearer ${accessToken}`,  // Adiciona o token no cabeçalho
+      'Content-Type': 'application/json'   // Certifica-se que o tipo de conteúdo é JSON
+    }
+  })
         .then(response => {
             authors.value = response.data;
         })
@@ -94,7 +105,12 @@ onMounted(() => {
             console.error(error.message);
         });
 
-    axios.get('http://127.0.0.1:8000/api/v1/genre')
+    axios.get('http://127.0.0.1:8000/api/v1/genre', {
+    headers: {
+      'Authorization': `Bearer ${accessToken}`,  // Adiciona o token no cabeçalho
+      'Content-Type': 'application/json'   // Certifica-se que o tipo de conteúdo é JSON
+    }
+  })
         .then(response => {
             genres.value = response.data;
         })
@@ -108,7 +124,12 @@ const updateBook = () => {
     dados.value.author = selectAuthor.value;
     dados.value.genre = selectedGenres.value;
 
-    axios.put(`http://127.0.0.1:8000/api/v1/bookinstance/${bookId}`, dados.value)
+    axios.put(`http://127.0.0.1:8000/api/v1/books/${bookId}`, dados.value, {
+    headers: {
+      'Authorization': `Bearer ${accessToken}`,  // Adiciona o token no cabeçalho
+      'Content-Type': 'application/json'   // Certifica-se que o tipo de conteúdo é JSON
+    }
+  })
         .then(response => {
             console.log('Book updated successfully!', response.data);
             router.push('/books');  // Redirecionar para a página de lista de livros

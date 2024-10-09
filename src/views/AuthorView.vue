@@ -53,9 +53,15 @@ import { ref } from 'vue';
 
 
 const authors = ref([])
+const accessToken = localStorage.getItem('access_token');
 
 const fetchAuthors = () => {
-    axios.get('http://127.0.0.1:8000/api/v1/author')
+    axios.get('http://127.0.0.1:8000/api/v1/author', {
+        headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+        }
+    })
         .then(response => {
 
             authors.value = response.data
@@ -71,7 +77,12 @@ fetchAuthors();
 // Função para deletar o autor
 const deleteAuthor = (authorId) => {
     console.log("Deleting author with ID:", authorId); // Verifique se o ID está correto
-    axios.delete(`http://127.0.0.1:8000/api/v1/author/${authorId}`)
+    axios.delete(`http://127.0.0.1:8000/api/v1/author/${authorId}`, {
+        headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+        }
+    })
         .then(response => {
             console.log('Autor deletado com sucesso!', response.data);
             authors.value = authors.value.filter(author => author.id !== authorId);

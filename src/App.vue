@@ -110,7 +110,7 @@ import { storeToRefs } from 'pinia';
 const router = useRouter();
 const authStore = useAuthStore();
 // const  { isAuthenticated } = storeToRefs(authStore);
-var isAuthenticated ;
+var isAuthenticated = false;
 
 if(localStorage.getItem("access_token") !== null){
   isAuthenticated = true
