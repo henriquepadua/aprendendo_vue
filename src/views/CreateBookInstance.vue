@@ -49,7 +49,7 @@
 
 <script setup>
 import axios from 'axios';
-import { ref } from 'vue';
+import { ref,onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
 const dados = ref({
@@ -64,7 +64,7 @@ const router = useRouter();
 
 const users = ref([]);
 
-
+onMounted(() => {    
 axios.get('http://localhost:8000/api/v1/User')
   .then(response => {
 
@@ -74,7 +74,7 @@ axios.get('http://localhost:8000/api/v1/User')
   .catch(error => {
     console.error(error.message)
   });
-
+})
 const createBookInstance = () => {
   const accessToken = localStorage.getItem('access_token');
 
