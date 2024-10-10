@@ -1,26 +1,26 @@
 <template>
   <div id="form">
-    <h1>Update Author</h1>
+    <h1>Atualizar Author</h1>
 
     <!-- Formulário para atualizar autor -->
     <form @submit.prevent="updateAuthor(author.id)">
       <div>
-        <label for="first_name">First Name:</label>
+        <label for="first_name">Primeiro Nome:</label>
         <input v-model="author.first_name" id="first_name" required>
       </div>
       <div>
-        <label for="last_name">Last Name:</label>
+        <label for="last_name">Primeiro Nome:</label>
         <input v-model="author.last_name" id="last_name" required>
       </div>
       <div>
-        <label for="date_of_birth">Date of Birth:</label>
+        <label for="date_of_birth">Data de nascimento:</label>
         <input v-model="author.date_of_birth" id="date_of_birth" required type="date">
       </div>
       <div>
-        <label for="date_of_death">Date of Death:</label>
+        <label for="date_of_death">Data da Morte:</label>
         <input v-model="author.date_of_death" id="date_of_death" required type="date">
       </div>
-      <button type="submit">Update Author</button>
+      <button type="submit">Atualizar Author</button>
     </form>
 
     <div v-if="responseMessage">

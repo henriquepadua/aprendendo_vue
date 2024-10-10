@@ -1,26 +1,26 @@
 <template>
 
   <head>
-    <title>Create Book</title>
+    <title>Criar livro</title>
   </head>
 
   <main id="form">
-    <h1 id="Form">Create New Book</h1>
+    <h1 id="Form">Criar novo livro</h1>
       <form @submit.prevent="createAuthor" >
         <div id="teste">
-          <label for="first_name">First Name:</label>
+          <label for="first_name">Primeiro nome:</label>
           <input v-model="dados.first_name" id="first_name" required>
         </div>
         <div>
-          <label for="last_name">Last Name:</label>
+          <label for="last_name">Sobrenome:</label>
           <input v-model="dados.last_name" id="last_name" required>
         </div>
         <div>
-          <label for="date_of_birth">Date_of_birth:</label>
+          <label for="date_of_birth">Data_de_nascimento:</label>
           <input v-model="dados.date_of_birth" id="date_of_birth" required>
         </div>
         <div>
-          <label for="Date_Of_Death">Date_Of_Death:</label>
+          <label for="Date_Of_Death">Data_de_morte:</label>
           <input v-model="dados.date_of_death" id="Date_Of_Death" required>
         </div>
         <button type="submit">Criar</button>

@@ -1,17 +1,17 @@
 <template>
     <head>
-        <title>Update Book</title>
+        <title>Atualizar Livro</title>
     </head>
 
     <main id="form">
-        <h1 id="Form">Update Book</h1>
+        <h1 id="Form">Atualizar Livro</h1>
         <form @submit.prevent="updateBook">
             <div id="teste">
-                <label for="Title">Title:</label>
+                <label for="Title">Titulo:</label>
                 <input v-model="dados.title" id="title" required>
             </div>
             <div>
-                <label for="Summary">Summary:</label>
+                <label for="Summary">Sumario:</label>
                 <input v-model="dados.summary" id="Summary" required>
             </div>
             <div>
@@ -36,7 +36,7 @@
                     </option>
                 </select>
             </div>
-            <button type="submit">Update</button>
+            <button type="submit">Atualizar</button>
         </form>
         <div v-if="resposta">
             <p>Resposta da API: {{ resposta }}</p>

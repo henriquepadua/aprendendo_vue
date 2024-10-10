@@ -1,6 +1,6 @@
 <template>
     <span class="d-none d-sm-inline">
-        <h1 style="text-align: center;">Books List</h1> &nbsp; &nbsp;
+        <h1 style="text-align: center;">Lista de Livros</h1> &nbsp; &nbsp;
         <router-link to="/createBook" class="btn btn-primary d-none d-sm-inline-block" id="criar">
             <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24"
                 stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -8,42 +8,44 @@
                 <path d="M12 5l0 14" />
                 <path d="M5 12l14 0" />
             </svg>
-            Create Book
+            Criar Livro
         </router-link>
     </span>
 
     <div v-if="books.length === 0">
-        <p style="text-align:center">Loading...</p>
+        <p style="text-align:center">Carregando...</p>
     </div>
 
     <div v-else class="card" v-for="book in books" :key="book.id" style="width: 68rem;">
         <div class="card-header">
-            <router-link :to="{ name: 'BookDetail', params: { id: book.id } }"
-                class="card-title"><strong>Description_Book</strong></router-link>
+            <router-link :to="{ name: 'BookDetail', params: { id: book.id } }" class="card-title"><strong>Descrição do
+                    Livro</strong></router-link>
         </div>
         <div class="table-responsive">
             <table class="table card-table table-vcenter">
                 <tbody>
                     <tr>
                         <td class="w-100">
-                            <p class="text-reset"><strong>Title: </strong> {{ book.title }}</p>
+                            <p class="text-reset"><strong>Titulo: </strong> {{ book.title }}</p>
                         </td>
                         <td class="text-nowrap text-secondary">
-                            <strong> Author First Name: </strong> {{ book.authorDetails?.first_name || 'Loading...' }},
-                            <strong> Author Last Name: </strong> {{ book.authorDetails?.last_name || 'Loading...' }},
-                            <strong> Genre: </strong> {{ book.genre }},
-                            <strong> Summary: </strong> {{ book.summary }},
+                            <strong> Primeiro nome Author: </strong> {{ book.authorDetails?.first_name ||
+                            'Carregando...' }},
+                            <strong> Sobrenome Author: </strong> {{ book.authorDetails?.last_name || 'Carregando...'
+                            }},
+                            <strong> Genero: </strong> {{ book.genre }},
+                            <strong> Sumario: </strong> {{ book.summary }},
                             <strong> Isbn: </strong> {{ book.isbn }}
                         </td>
                         <td class="text-nowrap">
                             <router-link :to="{ name: 'updateBook', params: { id: book.id } }" class="btn btn-primary">
-                                Update Book
+                                Atualizar Livro
                             </router-link>
                         </td>
                         <td class="text-nowrap">
                             <form @submit.prevent="deleteBook(book.id)">
                                 <button type="submit" class="btn btn-danger">
-                                    Delete Book
+                                    Deletar Livro
                                 </button>
                             </form>
                         </td>
@@ -57,6 +59,7 @@
 <script setup>
 import axios from 'axios';
 import { ref } from 'vue';
+import Swal from 'sweetalert2'
 
 const books = ref([])
 const accessToken = localStorage.getItem('access_token');
@@ -82,6 +85,19 @@ const fetchAuthors = () => {
                 })
                     .then(authorResponse => {
                         // Atribuir o nome do autor ao livro correto
+                        axios.get(`http://127.0.0.1:8000/api/v1/genre/${book.genre}`, {
+                            headers: {
+                                'Authorization': `Bearer ${accessToken}`,  // Adiciona o token no cabeçalho
+                                'Content-Type': 'application/json'   // Certifica-se que o tipo de conteúdo é JSON
+                            }
+                        })
+                        .then(response => {
+                            book.genre = response.data.name;
+                        })
+                        .catch(error => {
+                            console.error('Erro ao carregar o livro:', error.message);
+                        });
+
                         book.authorDetails = {
                             first_name: authorResponse.data.first_name,
                             last_name: authorResponse.data.last_name
@@ -102,28 +118,118 @@ const fetchAuthors = () => {
 };
 
 fetchAuthors();
-
 const deleteBook = (bookId) => {
-    console.log("Deleting author with ID:", bookId); // Verifique se o ID está correto
-    // const confirmed = confirm("Are you sure you want to delete this author?");
-    // if (confirmed) {
-    axios.delete(`http://127.0.0.1:8000/api/v1/books/${bookId}`, {
-        headers: {
-            'Authorization': `Bearer ${accessToken}`,
-            'Content-Type': 'application/json'
+    Swal.fire({
+        title: 'Tem certeza?',
+        text: "Você não poderá reverter isso!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sim, deletar!',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            console.log("Deleting book with ID:", bookId); // Verifique se o ID está correto
+
+            // Chama a API apenas após a confirmação do usuário
+            axios.delete(`http://127.0.0.1:8000/api/v1/books/${bookId}`, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                console.log('Book deletado com sucesso!', response.data);
+                // Atualiza a lista de livros após deletar
+                books.value = books.value.filter(book => book.id !== bookId);
+                
+                Swal.fire(
+                    'Deletado!',
+                    'O livro foi deletado com sucesso.',
+                    'success'
+                );
+            })
+            .catch(error => {
+                console.error('Erro ao deletar o livro:', error.response?.data || error.message);
+                Swal.fire(
+                    'Erro!',
+                    'Não é possível deletar um livro que possui Instância.',
+                    'error'
+                );
+            });
         }
-    })
-        .then(response => {
-            console.log('Book deletado com sucesso!', response.data);
-            // Atualiza a lista de autores após deletar
-            books.value = books.value.filter(book => book.id !== bookId);
-            fetchAuthors();
-        })
-        .catch(error => {
-            console.error('Erro ao deletar o autor:', error.response?.data || error.message);
-        });
-    // }
+    });
 };
+
+// const deleteBook = (bookId) => {
+//     Swal.fire({
+//         title: 'Tem certeza?',
+//         text: "Você não poderá reverter isso!",
+//         icon: 'warning',
+//         showCancelButton: true,
+//         confirmButtonColor: '#3085d6',
+//         cancelButtonColor: '#d33',
+//         confirmButtonText: 'Sim, deletar!',
+//         cancelButtonText: 'Cancelar'
+//     }).then((result) => {
+//         if (result.isConfirmed) {
+//             console.log("Deleting author with ID:", bookId); // Verifique se o ID está correto
+//             // const confirmed = confirm("Are you sure you want to delete this author?");
+//             // if (confirmed) {
+//             axios.delete(`http://127.0.0.1:8000/api/v1/books/${bookId}`, {
+//                 headers: {
+//                     'Authorization': `Bearer ${accessToken}`,
+//                     'Content-Type': 'application/json'
+//                 }
+//             })
+//                 .then(response => {
+//                     console.log('Book deletado com sucesso!', response.data);
+//                     // Atualiza a lista de autores após deletar
+//                     books.value = books.value.filter(book => book.id !== bookId);
+//                     fetchAuthors();
+                    
+//                     Swal.fire(
+//                     'Deletado!',
+//                     'O autor foi deletado com sucesso.',
+//                     'success'
+//                 );
+//             })
+//             .catch(error => {
+//                 console.error('Erro ao deletar o autor:', error.response?.data || error.message);
+//                 Swal.fire(
+//                     'Erro!',
+//                     'Não é possível deletar Livro que está possui Instância',
+//                     'error'
+//                 );
+//             });
+//                 // })
+//                 // .catch(error => {
+//                 //     console.error('Erro ao deletar o autor:', error.response?.data || error.message);
+//                 // });
+//         }
+//     })
+
+//     console.log("Deleting author with ID:", bookId); // Verifique se o ID está correto
+//     // const confirmed = confirm("Are you sure you want to delete this author?");
+//     // if (confirmed) {
+//     axios.delete(`http://127.0.0.1:8000/api/v1/books/${bookId}`, {
+//         headers: {
+//             'Authorization': `Bearer ${accessToken}`,
+//             'Content-Type': 'application/json'
+//         }
+//     })
+//         .then(response => {
+//             console.log('Book deletado com sucesso!', response.data);
+//             // Atualiza a lista de autores após deletar
+//             books.value = books.value.filter(book => book.id !== bookId);
+//             fetchAuthors();
+//         })
+//         .catch(error => {
+//             console.error('Erro ao deletar o autor:', error.response?.data || error.message);
+//         });
+//     // }
+// };
 
 /*
 const deleteAuthor = (authorId) => {

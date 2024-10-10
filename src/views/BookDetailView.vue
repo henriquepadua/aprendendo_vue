@@ -1,17 +1,17 @@
 <template>
 
   <head>
-    <title>Book Detail</title>
+    <title>Detalhe do livro</title>
   </head>
 
   <main id="form">
-    <h1 id="Form">Book Detail</h1>
+    <h1 id="Form">Detalhe do livro</h1>
     <div id="teste">
-      <label for="Title">Title:</label>
+      <label for="Title">Titulo:</label>
       <p>{{ dados.title }}</p>
     </div>
     <div id="teste">
-      <label for="Summary">Summary:</label>
+      <label for="Summary">Sumario:</label>
       <p>{{ dados.summary }}</p>
     </div>
     <div id="teste">
@@ -22,35 +22,34 @@
       <label for="Author">Autor:</label>
       <p>{{ authors.first_name }}, {{ authors.last_name }}</p>
     </div>
-    <div id="teste" v-for="genre in genres" :key="genre.id" :value="genre.id">
+    <div id="teste" >
       <label for="Genre">Gênero:</label>
-      {{ genre.name }}
+      {{ genres }}
     </div>
     <div id="teste" v-if="resposta">
       <p>Resposta da API: {{ resposta }}</p>
     </div>
-
     <div id="copies" style="margin-left:20px;margin-top:20px">
       <router-link to="/createInstance" class="btn btn-primary" id="createInstance">
-        <strong> Create_BookInstance</strong>
+        <strong> Criar Intancias</strong>
       </router-link>
-      <h4 style="padding:10px;">Copies</h4>
+      <h4 style="padding:10px;">Copias</h4>
       <div v-for="bookinstance in booksinstances" :key="bookinstance.id">
-        <strong> imprint: </strong> {{ bookinstance.imprint }}, <strong> due_back:
+        <strong> imprimir: </strong> {{ bookinstance.imprint }}, <strong> devido de volta:
         </strong>{{ bookinstance.due_back }}, <strong> status: </strong>{{ bookinstance.status }} ,
-        <strong> borrower: </strong>{{ bookinstance.borrower }}
+        <strong> mutuario: </strong>{{ bookinstance.borrower }}
         <h1 style="padding: 20px;"></h1>
         <table class="table card-table table-vcenter">
           <tr>
             <td class="text-nowrap">
               <router-link :to="{ name: 'UpdateBookDetail', params: { id: bookinstance.id } }" class="btn btn-primary">
-                <strong> Update_BookInstance</strong>
+                <strong>Atualizar BookInstance</strong>
               </router-link>
             </td>
             <td class="text-nowrap">
               <form @submit.prevent="deleteBookInstance(bookinstance.id)">
                 <button type="submit" class="btn btn-danger">
-                  Delete Book
+                  Excluir livro
                 </button>
               </form>
             </td>
@@ -68,17 +67,14 @@ import axios from 'axios';
 import { ref, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
-
 const dados = ref({
   id: 0,
   title: "",
   summary: "",
   isbn: "",
   author: 0,
-  genre: [],
-  bookinstance_set: [
-
-  ]
+  genre: "",
+  bookinstance_set: []
 });
 
 const genres = ref([]);
@@ -87,6 +83,7 @@ const resposta = ref('');
 const route = useRoute();
 const bookId = route.params.id;
 const booksinstances = ref([]);
+const accessToken = localStorage.getItem('access_token');
 
 onMounted(() => {
   const accessToken = localStorage.getItem('access_token');
@@ -102,13 +99,14 @@ onMounted(() => {
       const book = response.data;
       console.log(book)
       dados.value.id = book.id;
-      localStorage.setItem('bookID',book.id);
+      localStorage.setItem('bookID', book.id);
       booksinstances.value = book.bookinstance_set;
       dados.value.title = book.title;
       dados.value.summary = book.summary;
       dados.value.isbn = book.isbn;
       selectAuthor.value = book.author;
-
+      dados.value.genre = book.genre;
+      console.log(book.genre)
       axios.get(`http://127.0.0.1:8000/api/v1/author/${selectAuthor.value}`, {
         headers: {
           'Authorization': `Bearer ${accessToken}`,  // Adiciona o token no cabeçalho
@@ -121,24 +119,75 @@ onMounted(() => {
         .catch(error => {
           console.error(error.message);
         });
+
+      axios.get(`http://127.0.0.1:8000/api/v1/genre/${book.genre}`, {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,  // Adiciona o token no cabeçalho
+          'Content-Type': 'application/json'   // Certifica-se que o tipo de conteúdo é JSON
+        }
+      })
+        .then(response => {
+          genres.value = response.data.name;
+        })
+        .catch(error => {
+          console.error(error.message);
+        });
     })
     .catch(error => {
       console.error('Erro ao carregar o livro:', error.message);
     });
 
-  axios.get('http://127.0.0.1:8000/api/v1/genre', {
-    headers: {
-      'Authorization': `Bearer ${accessToken}`,  // Adiciona o token no cabeçalho
-      'Content-Type': 'application/json'   // Certifica-se que o tipo de conteúdo é JSON
-    }
-  })
-    .then(response => {
-      genres.value = response.data;
-    })
-    .catch(error => {
-      console.error(error.message);
-    });
+
 });
+
+// const showAddGenreAlert = () => {
+//   Swal.fire({
+//     title: 'Adicionar Novo Gênero',
+//     input: 'text',
+//     inputLabel: 'Nome do Gênero',
+//     inputPlaceholder: 'Digite o nome do novo gênero',
+//     showCancelButton: true,
+//     confirmButtonText: 'Criar',
+//     cancelButtonText: 'Cancelar',
+//     inputValidator: (value) => {
+//       if (!value) {
+//         return 'Você precisa inserir um nome!';
+//       }
+//     }
+//   }).then((result) => {
+//     if (result.isConfirmed) {
+//       const newGenreName = result.value;
+//       addNewGenre(newGenreName);
+//     }
+//   });
+// };
+
+// const addNewGenre = (genreName) => {
+//   axios.post('http://127.0.0.1:8000/api/v1/genre', {
+//     name: genreName
+//   }, {
+//     headers: {
+//       'Authorization': `Bearer ${accessToken}`,
+//       'Content-Type': 'application/json'
+//     }
+//   })
+//     .then(response => {
+//       genres.value.push(response.data); // Atualiza a lista de gêneros localmente
+//       Swal.fire(
+//         'Sucesso!',
+//         `O gênero "${genreName}" foi criado com sucesso.`,
+//         'success'
+//       );
+//     })
+//     .catch(error => {
+//       Swal.fire(
+//         'Erro!',
+//         'Ocorreu um erro ao criar o gênero.',
+//         'error'
+//       );
+//       console.error('Erro ao criar o gênero:', error.message);
+//     });
+// };
 
 const deleteBookInstance = (bookinstanceID) => {
   const accessToken = localStorage.getItem('access_token');

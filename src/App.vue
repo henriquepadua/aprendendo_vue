@@ -57,7 +57,7 @@
                   </svg>
                 </span>
                 <span class="nav-link-title">
-                  Home
+                  Principal
                 </span></router-link>
             </li>
             <li class="nav-item">
@@ -74,7 +74,7 @@
                   </svg>
                 </span>
                 <span class="nav-link-title">
-                  Books
+                  Livros
                 </span></router-link>
             </li>
             <li class="nav-item">
@@ -90,7 +90,7 @@
                   </svg>
                 </span>
                 <span class="nav-link-title">
-                  Authors
+                  Autores
                 </span></router-link>
             </li>
           </ul>

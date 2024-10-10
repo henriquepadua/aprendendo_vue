@@ -1,30 +1,30 @@
 <template>
     <div class="card" style="width: 60rem;">
         <div class="card-header">
-            <h1>Update BookInstance</h1>
+            <h1>Atualizar Instância do Livro</h1>
         </div>
 
         <form @submit.prevent="updateBookInstance()">
             <div>
-                <label for="Imprint">Imprint:</label>
+                <label for="Imprint">Imprimir:</label>
                 <input v-model="bookInstance.imprint" id="imprint" required>
             </div>
             <div>
-                <label for="Due_back">Due back:</label>
+                <label for="Due_back">Prazo de volta:</label>
                 <input type="date" v-model="bookInstance.due_back" id="due_back" required>
             </div>
             <div>
                 <label for="Status">Status:</label>
                 <select v-model="bookInstance.status" id="status" required>
-                    <option disabled value="">Select status</option>
-                    <option value="a">Available</option>
-                    <option value="o">On loan</option>
-                    <option value="m">Maintenance</option>
-                    <option value="r">Reserved</option>
+                    <option disabled value="">Selecionar status</option>
+                    <option value="a">Disponível</option>
+                    <option value="o">Emprestado</option>
+                    <option value="m">Manutenção</option>
+                    <option value="r">Reservadd</option>
                 </select>
             </div>
             <div>
-                <label for="borrower">Borrower:</label>
+                <label for="borrower">Receberá o empréstimo:</label>
                 <select v-model="bookInstance.borrower" id="borrower" required>
                     <option disabled value="">Select Users for Borrower</option>
                     <!-- Aqui estamos usando v-for para iterar sobre a lista de usuários -->
@@ -38,12 +38,12 @@
                 <input v-model="bookInstance.borrower" id="borrower">
             </div> -->
 
-            <button type="submit">Update BookInstance</button>
+            <button type="submit">Atualizar Instância do Livro</button>
         </form>
 
 
         <div v-if="responseMessage">
-            <p>Response: {{ responseMessage }}</p>
+            <p>Resposta: {{ responseMessage }}</p>
         </div>
     </div>
 </template>

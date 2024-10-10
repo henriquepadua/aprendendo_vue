@@ -15,11 +15,6 @@ const router = createRouter({
       component: HomeView
     },
     {
-      path: '/teste',
-      name: 'teste',
-      component: () => import('@/views/TesteView.vue')
-    },
-    {
       path: '/authors',
       name: 'author',
       component: () => import('@/views/AuthorView.vue')
@@ -78,11 +73,6 @@ const router = createRouter({
       path: '/createInstance',
       name: 'createInstance',
       component: () => import('@/views/CreateBookInstance.vue')
-    },
-    {
-      path: '/testestore',
-      name: 'testestore',
-      component: () => import('@/views/TesteView.vue')
     },
   ]
 })

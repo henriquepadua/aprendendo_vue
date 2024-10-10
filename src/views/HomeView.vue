@@ -4,7 +4,7 @@
 
 <template>
   <main id="main">
-    <p style="text-align: center;" class="Title">The library has the following record counts:</p>
+    <p style="text-align: center;" class="Title">A biblioteca tem as seguintes contagens de registros:</p>
   <div class="table-responsive">
     <div class="col-6" id="Home">
       <div class="row row-cards">
@@ -19,7 +19,7 @@
                 </div>
                 <div class="col">
                   <div class="font-weight-medium">
-                    Books:
+                    Livros:
                   </div>
                   <div class="text-secondary">
                     {{ book.length }}
@@ -41,7 +41,7 @@
                 </div>
                 <div class="col">
                   <div class="font-weight-medium">
-                    Authors:
+                    Autores:
                   </div>
                   <div class="text-secondary">
                     {{ author.length }}
@@ -63,7 +63,7 @@
                 </div>
                 <div class="col">
                   <div class="font-weight-medium">
-                    Copies available:
+                    Cópias disponíveis:
                   </div>
                   <div class="text-secondary">
                     {{ bookinstance.length}}

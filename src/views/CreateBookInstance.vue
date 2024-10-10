@@ -1,31 +1,31 @@
 <template >
   <div id="card">
   <head>
-    <title>Create BookInstance</title>
+    <title>Criar instâncias de livros</title>
   </head>
 
   <main id="form">
-    <h1 id="Form">Create New BookInstance</h1>
+    <h1 id="Form">Criar nova instância de livro</h1>
     <form @submit.prevent="createBookInstance">
       <div>
-        <label for="due_back">Due Back:</label>
+        <label for="due_back">Prazo de entrega:</label>
         <input v-model="dados.due_back" type="date" id="due_back" required>
       </div>
       <div>
         <label for="status">Status:</label>
         <select v-model="dados.status" id="status" required>
-          <option disabled value="">Select status</option>
-          <option value="m">Maintenance</option>
-          <option value="o">On Loan</option>
-          <option value="a">Available</option>
-          <option value="r">Reserved</option>
+          <option disabled value="">Selecionar status</option>
+          <option value="m">Manutenção</option>
+          <option value="o">Empréstimo</option>
+          <option value="a">Disponível</option>
+          <option value="r">Reservado</option>
         </select>
       </div>
       <div>
-        <label for="borrower">Borrower:</label>
+        <label for="borrower">Mutuário:</label>
         <select v-model="dados.borrower" id="borrower" required>
-          <option disabled value="">Select Users for Borrower</option>
-          <!-- Aqui estamos usando v-for para iterar sobre a lista de usuários -->
+          <option disabled value="">Selecione usuários para mutuário</option>
+          
           <option v-for="user in users" :key="user.id" :value="user.id">
             {{ user.username }}
           </option>
@@ -33,14 +33,14 @@
 
       </div>
       <div>
-        <label for="imprint">Imprint:</label>
+        <label for="imprint">Imprimir:</label>
         <input v-model="dados.imprint" id="imprint">
       </div>
-      <button type="submit">Create BookInstance</button>
+      <button type="submit">Criar BookInstance</button>
     </form>
 
     <div v-if="resposta">
-      <p>API Response: {{ resposta }}</p>
+      <p>API Resposta: {{ resposta }}</p>
     </div>
   </main>
   </div>
@@ -85,14 +85,6 @@ axios.get('http://localhost:8000/api/v1/user', {
 })
 const createBookInstance = () => {
   const bookdetaliId = localStorage.getItem('bookID');
-  const selectedUser = users.value.find(user => user.id === dados.value.borrower);
-
-  if (selectedUser) {
-    dados.value.borrower = selectedUser.id;  // Aqui você configura o borrower corretamente
-  } else {
-    console.error('Selecione um usuário válido para o empréstimo.');
-    return;
-  }
   
   axios.post('http://127.0.0.1:8000/api/v1/bookinstance', dados.value, {
     headers: {

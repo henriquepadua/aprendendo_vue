@@ -1,18 +1,18 @@
 <template>
 
     <head>
-        <title>Create Book</title>
+        <title>Criar livro</title>
     </head>
 
     <main id="form">
-        <h1 id="Form">Create New Book</h1>
+        <h1 id="Form">Criar novo livro</h1>
         <form @submit.prevent="createBook">
             <div id="teste">
-                <label for="Title">Title:</label>
+                <label for="Title">Título:</label>
                 <input v-model="dados.title" id="title" required>
             </div>
             <div>
-                <label for="Summary">Summary:</label>
+                <label for="Summary">Resumo:</label>
                 <input v-model="dados.summary" id="Summary" required>
             </div>
             <div>
@@ -20,7 +20,7 @@
                 <input v-model="dados.isbn" id="Isbn" required>
             </div>
             <div>
-                <label for="Author">Autor:</label>
+                <label for="Author">Author:</label>
                 <select class="form-select" v-model="selectAuthor">
                     <option disabled value="">Selecione um autor</option>
                     <option v-for="author in authors" :key="author.id" :value="author.id">
@@ -37,9 +37,9 @@
                         {{ genre.name }}
                     </option>
                 </select>
-                <span></span>
+                <button @click.prevent="showAddGenreAlert">+ Adicionar Novo Gênero</button>
             </div>
-            <button type="submit">Create</button>
+            <button type="submit">Criar</button>
         </form>
         <div v-if="resposta">
             <p>Resposta da API: {{ resposta }}</p>
@@ -53,6 +53,7 @@
 import axios from 'axios';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router'; // Importar o Vue Router
+import Swal from 'sweetalert2'
 
 const selectedGenres = ref(0)
 const selectAuthor = ref(0)
@@ -73,6 +74,56 @@ const genres = ref([])
 
 const authors = ref([])
 const accessToken = localStorage.getItem('access_token');
+
+const showAddGenreAlert = () => {
+  Swal.fire({
+    title: 'Adicionar Novo Gênero',
+    input: 'text',
+    inputLabel: 'Nome do Gênero',
+    inputPlaceholder: 'Digite o nome do novo gênero',
+    showCancelButton: true,
+    confirmButtonText: 'Criar',
+    cancelButtonText: 'Cancelar',
+    inputValidator: (value) => {
+      if (!value) {
+        return 'Você precisa inserir um nome!';
+      }
+    }
+  }).then((result) => {
+    if (result.isConfirmed) {
+      const newGenreName = result.value;
+      addNewGenre(newGenreName);
+    }
+  });
+};
+
+const addNewGenre = (genreName) => {
+  axios.post('http://127.0.0.1:8000/api/v1/genre', {
+    name: genreName
+  }, {
+    headers: {
+      'Authorization': `Bearer ${accessToken}`,
+      'Content-Type': 'application/json'
+    }
+  })
+    .then(response => {
+      genres.value.push(response.data); // Atualiza a lista de gêneros localmente
+      Swal.fire(
+        'Sucesso!',
+        `O gênero "${genreName}" foi criado com sucesso.`,
+        'success'
+      );
+    })
+    .catch(error => {
+      Swal.fire(
+        'Erro!',
+        'Ocorreu um erro ao criar o gênero.',
+        'error'
+      );
+      console.error('Erro ao criar o gênero:', error.message);
+    });
+};
+
 
 axios.get('http://127.0.0.1:8000/api/v1/author', {
     headers: {

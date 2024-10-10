@@ -8,33 +8,33 @@
                 <path d="M12 5l0 14" />
                 <path d="M5 12l14 0" />
             </svg>
-            Create Author
-        </router-link>
+            Criar autor </router-link>
     </span>
     <div class="card" v-for="author in authors" :key="author.id" style="width: 58rem;">
         <div class="card-header">
-            <p href="#" class="text-reset"><strong>First_Name: </strong> {{ author.first_name }}
-                                <strong>First_Name: </strong> {{ author.last_name }}
-                            </p>        </div>
+            <p href="#" class="text-reset"><strong>Primeiro nome: </strong> {{ author.first_name }}
+                <strong>Sobrenome: </strong> {{ author.last_name }}
+            </p>
+        </div>
         <div class="table-responsive">
             <table class="table card-table table-vcenter">
                 <tbody>
                     <tr>
                         <td class="text-nowrap">
                             <p href="#" class="text-secondary">
-                                <strong>Date_of_Birth: </strong> {{ author.date_of_birth }} <strong>Date_Of_Death:
+                                <strong>Data de Nascimento: </strong> {{ author.date_of_birth }} <strong>Data da Morte:
                                 </strong> {{ author.date_of_death }}
                             </p>
                         </td>
                         <td class="text-nowrap">
                             <router-link :to="`/updateAuthor/${author.id}`" class="btn btn-primary">
-                                Update Author
+                                Atualizar Author
                             </router-link>
                         </td>
                         <td class="text-nowrap">
                             <form @submit.prevent="deleteAuthor(author.id)">
                                 <button type="submit" class="btn btn-danger">
-                                    Delete Author
+                                    Deletar Author
                                 </button>
                             </form>
                         </td>
@@ -50,7 +50,7 @@
 import router from '@/router';
 import axios from 'axios';
 import { ref } from 'vue';
-
+import Swal from 'sweetalert2'
 
 const authors = ref([])
 const accessToken = localStorage.getItem('access_token');
@@ -76,24 +76,74 @@ fetchAuthors();
 
 // Função para deletar o autor
 const deleteAuthor = (authorId) => {
-    console.log("Deleting author with ID:", authorId); // Verifique se o ID está correto
-    axios.delete(`http://127.0.0.1:8000/api/v1/author/${authorId}`, {
-        headers: {
-            'Authorization': `Bearer ${accessToken}`,
-            'Content-Type': 'application/json'
-        }
-    })
-        .then(response => {
-            console.log('Autor deletado com sucesso!', response.data);
-            authors.value = authors.value.filter(author => author.id !== authorId);
+    // Exibe um alerta de confirmação antes de deletar
+    Swal.fire({
+        title: 'Tem certeza?',
+        text: "Você não poderá reverter isso!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sim, deletar!',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Se o usuário confirmar, execute a deleção
+            console.log("Deleting author with ID:", authorId); // Verifique se o ID está correto
+            axios.delete(`http://127.0.0.1:8000/api/v1/author/${authorId}`, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                console.log('Autor deletado com sucesso!', response.data);
+                // Remove o autor da lista
+                authors.value = authors.value.filter(author => author.id !== authorId);
 
-            // Atualiza a lista de autores após deletar
-            fetchAuthors();
-        })
-        .catch(error => {
-            console.error('Erro ao deletar o autor:', error.response?.data || error.message);
-        });
+                // Atualiza a lista de autores após deletar
+                fetchAuthors();
+                
+                // Exibe um alerta de sucesso
+                Swal.fire(
+                    'Deletado!',
+                    'O autor foi deletado com sucesso.',
+                    'success'
+                );
+            })
+            .catch(error => {
+                console.error('Erro ao deletar o autor:', error.response?.data || error.message);
+                Swal.fire(
+                    'Erro!',
+                    'Não é possível deletar Author que está cadastrado em algum Livro',
+                    'error'
+                );
+            });
+        }
+    });
 };
+
+
+// const deleteAuthor = (authorId) => {
+    
+//     console.log("Deleting author with ID:", authorId); // Verifique se o ID está correto
+//     axios.delete(`http://127.0.0.1:8000/api/v1/author/${authorId}`, {
+//         headers: {
+//             'Authorization': `Bearer ${accessToken}`,
+//             'Content-Type': 'application/json'
+//         }
+//     })
+//         .then(response => {
+//             console.log('Autor deletado com sucesso!', response.data);
+//             authors.value = authors.value.filter(author => author.id !== authorId);
+
+//             // Atualiza a lista de autores após deletar
+//             fetchAuthors();
+//         })
+//         .catch(error => {
+//             console.error('Erro ao deletar o autor:', error.response?.data || error.message);
+//         });
+// };
 
 </script>
 

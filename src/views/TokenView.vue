@@ -3,11 +3,11 @@
         <h1>Login</h1>
         <form @submit.prevent="login">
             <div>
-                <label for="username">Username</label>
+                <label for="username">Usuario</label>
                 <input type="text" v-model="username" id="username" required>
             </div>
             <div>
-                <label for="password">Password</label>
+                <label for="password">Senha</label>
                 <input type="password" v-model="password" id="password" required>
             </div>
             <button type="submit">Login</button>
@@ -61,11 +61,27 @@ export default {
                 localStorage.setItem('access_token', data.access);
                 localStorage.setItem('refresh_token', data.refresh);
 
-
                 this.$router.push("/").then(() => {
                     // Recarrega a página após a navegação ser concluída
                     window.location.reload(true); // força o recarregamento completo da página
                 });
+                
+                /*
+                Swal.fire(
+                    'Deletado!',
+                    'O autor foi deletado com sucesso.',
+                    'success'
+                );
+            })
+            .catch(error => {
+                console.error('Erro ao deletar o autor:', error.response?.data || error.message);
+                Swal.fire(
+                    'Erro!',
+                    'Não é possível deletar Livro que está possui Instância',
+                    'error'
+                );
+            });
+                */
 
             } catch (error) {
                 this.error = 'Credenciais inválidas ou erro de servidor';
