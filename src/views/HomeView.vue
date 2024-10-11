@@ -63,7 +63,7 @@
                 </div>
                 <div class="col">
                   <div class="font-weight-medium">
-                    Cópias disponíveis:
+                    Cópias emprestadas:
                   </div>
                   <div class="text-secondary">
                     {{ bookinstance.length}}

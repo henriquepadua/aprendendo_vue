@@ -20,10 +20,10 @@
                     <option value="a">Disponível</option>
                     <option value="o">Emprestado</option>
                     <option value="m">Manutenção</option>
-                    <option value="r">Reservadd</option>
+                    <option value="r">Reservado</option>
                 </select>
             </div>
-            <div>
+            <div v-if="bookInstance.status === 'o' || bookInstance.status === 'r'">
                 <label for="borrower">Receberá o empréstimo:</label>
                 <select v-model="bookInstance.borrower" id="borrower" required>
                     <option disabled value="">Select Users for Borrower</option>

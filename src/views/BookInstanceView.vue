@@ -65,6 +65,7 @@ const booksinstances = ref([])
 const accessToken = localStorage.getItem('access_token');
 const router = useRouter();
 const route = useRoute();
+console.log("isntancias" )
 
 axios.get('http://127.0.0.1:8000/api/v1/bookinstance', {
     headers: {
@@ -73,9 +74,9 @@ axios.get('http://127.0.0.1:8000/api/v1/bookinstance', {
     }
 })
     .then(response => {
-
+        console.log("isntancias" )
         booksinstances.value = response.data
-        console.log(booksinstances.value)
+        console.log("isntancias" + booksinstances.value)
         console.log(booksinstances.book)
     })
     .catch(error => {

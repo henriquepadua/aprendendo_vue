@@ -16,12 +16,12 @@
           <input v-model="dados.last_name" id="last_name" required>
         </div>
         <div>
-          <label for="date_of_birth">Data_de_nascimento:</label>
-          <input v-model="dados.date_of_birth" id="date_of_birth" required>
+          <label for="date_of_birth" type="date">Data_de_nascimento:</label>
+          <input v-model="dados.date_of_birth" id="date_of_birth" type="date" required>
         </div>
         <div>
           <label for="Date_Of_Death">Data_de_morte:</label>
-          <input v-model="dados.date_of_death" id="Date_Of_Death" required>
+          <input v-model="dados.date_of_death" id="Date_Of_Death" type="date" required>
         </div>
         <button type="submit">Criar</button>
       </form>

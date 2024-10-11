@@ -12,33 +12,11 @@
         <input v-model="dados.due_back" type="date" id="due_back" required>
       </div>
       <div>
-        <label for="status">Status:</label>
-        <select v-model="dados.status" id="status" required>
-          <option disabled value="">Selecionar status</option>
-          <option value="m">Manutenção</option>
-          <option value="o">Empréstimo</option>
-          <option value="a">Disponível</option>
-          <option value="r">Reservado</option>
-        </select>
-      </div>
-      <div>
-        <label for="borrower">Mutuário:</label>
-        <select v-model="dados.borrower" id="borrower" required>
-          <option disabled value="">Selecione usuários para mutuário</option>
-          
-          <option v-for="user in users" :key="user.id" :value="user.id">
-            {{ user.username }}
-          </option>
-        </select>
-
-      </div>
-      <div>
         <label for="imprint">Imprimir:</label>
-        <input v-model="dados.imprint" id="imprint">
+        <input v-model="dados.imprint" id="imprint" required>
       </div>
       <button type="submit">Criar BookInstance</button>
     </form>
-
     <div v-if="resposta">
       <p>API Resposta: {{ resposta }}</p>
     </div>
@@ -75,9 +53,7 @@ axios.get('http://localhost:8000/api/v1/user', {
         }
     })
   .then(response => {
-
     users.value = response.data
-
   })
   .catch(error => {
     console.error(error.message)

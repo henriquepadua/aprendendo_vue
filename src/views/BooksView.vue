@@ -120,19 +120,7 @@ const fetchAuthors = () => {
                                 console.error('Erro ao carregar o livro:', error.message);
                             });
                         }
-                        // axios.get(`http://127.0.0.1:8000/api/v1/genre/${book.genre}`, {
-                        //     headers: {
-                        //         'Authorization': `Bearer ${accessToken}`,  // Adiciona o token no cabeçalho
-                        //         'Content-Type': 'application/json'   // Certifica-se que o tipo de conteúdo é JSON
-                        //     }
-                        // })
-                        // .then(response => {
-                        //     book.genre = response.data.name;
-                        // })
-                        // .catch(error => {
-                        //     console.error('Erro ao carregar o livro:', error.message);
-                        // });
-
+                        
                         book.authorDetails = {
                             first_name: authorResponse.data.first_name,
                             last_name: authorResponse.data.last_name
