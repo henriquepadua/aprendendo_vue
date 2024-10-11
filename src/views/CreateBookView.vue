@@ -155,11 +155,12 @@ axios.get('http://127.0.0.1:8000/api/v1/genre', {
         console.error(error.message)
     });
 
-// Função para criar um autor
+// Função para criar um livro
 const createBook = () => {
     dados.value.author = selectAuthor.value
     console.log(selectedGenres.value)
     dados.value.genre = selectedGenres.value
+    localStorage.setItem("genre",dados.value.genre)
     axios.post('http://127.0.0.1:8000/api/v1/books', dados.value, {
     headers: {
       'Authorization': `Bearer ${accessToken}`,  // Adiciona o token no cabeçalho

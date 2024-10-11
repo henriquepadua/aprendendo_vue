@@ -33,7 +33,7 @@
                             'Carregando...' }},
                             <strong> Sobrenome Author: </strong> {{ book.authorDetails?.last_name || 'Carregando...'
                             }},
-                            <strong> Genero: </strong> {{ book.genre }},
+                            <strong> Genero: </strong> {{ book.genre }}
                             <strong> Sumario: </strong> {{ book.summary }},
                             <strong> Isbn: </strong> {{ book.isbn }}
                         </td>
@@ -63,8 +63,8 @@ import Swal from 'sweetalert2'
 
 const books = ref([])
 const accessToken = localStorage.getItem('access_token');
+const genres = ref([])// Primeiro, busque os livros
 
-// Primeiro, busque os livros
 const fetchAuthors = () => {
     axios.get('http://127.0.0.1:8000/api/v1/books', {
         headers: {
@@ -85,18 +85,53 @@ const fetchAuthors = () => {
                 })
                     .then(authorResponse => {
                         // Atribuir o nome do autor ao livro correto
-                        axios.get(`http://127.0.0.1:8000/api/v1/genre/${book.genre}`, {
-                            headers: {
-                                'Authorization': `Bearer ${accessToken}`,  // Adiciona o token no cabeçalho
-                                'Content-Type': 'application/json'   // Certifica-se que o tipo de conteúdo é JSON
-                            }
-                        })
-                        .then(response => {
-                            book.genre = response.data.name;
-                        })
-                        .catch(error => {
-                            console.error('Erro ao carregar o livro:', error.message);
-                        });
+                        if (book.genre.length > 1) {
+                        // Cria um array de promessas para todas as requisições
+                            const genreRequests = book.genre.map(genreId => {
+                                return axios.get(`http://127.0.0.1:8000/api/v1/genre/${genreId}`, {
+                                headers: {
+                                    'Authorization': `Bearer ${accessToken}`,
+                                    'Content-Type': 'application/json',
+                                }
+                                });
+                            });
+
+                        // Usa Promise.all para resolver todas as promessas de uma vez
+                            Promise.all(genreRequests)
+                                .then(responses => {
+                                // Combina os nomes de todos os gêneros recebidos
+                                book.genre = responses.map(response => response.data.name).join(', ');
+                                })
+                                .catch(error => {
+                                console.error('Erro ao buscar os gêneros:', error.message);
+                                });
+                        }
+                        else{
+                            axios.get(`http://127.0.0.1:8000/api/v1/genre/${book.genre}`, {
+                                headers: {
+                                    'Authorization': `Bearer ${accessToken}`,  // Adiciona o token no cabeçalho
+                                    'Content-Type': 'application/json'   // Certifica-se que o tipo de conteúdo é JSON
+                                }
+                            })
+                            .then(response => {
+                                book.genre = response.data.name;
+                            })
+                            .catch(error => {
+                                console.error('Erro ao carregar o livro:', error.message);
+                            });
+                        }
+                        // axios.get(`http://127.0.0.1:8000/api/v1/genre/${book.genre}`, {
+                        //     headers: {
+                        //         'Authorization': `Bearer ${accessToken}`,  // Adiciona o token no cabeçalho
+                        //         'Content-Type': 'application/json'   // Certifica-se que o tipo de conteúdo é JSON
+                        //     }
+                        // })
+                        // .then(response => {
+                        //     book.genre = response.data.name;
+                        // })
+                        // .catch(error => {
+                        //     console.error('Erro ao carregar o livro:', error.message);
+                        // });
 
                         book.authorDetails = {
                             first_name: authorResponse.data.first_name,

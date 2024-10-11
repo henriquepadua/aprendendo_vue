@@ -1,5 +1,4 @@
 <template>
-
   <head>
     <title>Detalhe do livro</title>
   </head>
@@ -17,7 +16,7 @@
     <div id="teste">
       <label for="Isbn">Isbn:</label>
       <p>{{ dados.isbn }}</p>
-    </div id="teste">
+    </div>
     <div id="teste">
       <label for="Author">Autor:</label>
       <p>{{ authors.first_name }}, {{ authors.last_name }}</p>
@@ -25,9 +24,6 @@
     <div id="teste" >
       <label for="Genre">Gênero:</label>
       {{ genres }}
-    </div>
-    <div id="teste" v-if="resposta">
-      <p>Resposta da API: {{ resposta }}</p>
     </div>
     <div id="copies" style="margin-left:20px;margin-top:20px">
       <router-link to="/createInstance" class="btn btn-primary" id="createInstance">
@@ -120,74 +116,46 @@ onMounted(() => {
           console.error(error.message);
         });
 
-      axios.get(`http://127.0.0.1:8000/api/v1/genre/${book.genre}`, {
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,  // Adiciona o token no cabeçalho
-          'Content-Type': 'application/json'   // Certifica-se que o tipo de conteúdo é JSON
-        }
-      })
-        .then(response => {
-          genres.value = response.data.name;
-        })
-        .catch(error => {
-          console.error(error.message);
-        });
+        if (book.genre.length > 1) {
+  // Cria um array de promessas para todas as requisições
+  const genreRequests = book.genre.map(genreId => {
+    return axios.get(`http://127.0.0.1:8000/api/v1/genre/${genreId}`, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      }
+    });
+  });
+
+  // Usa Promise.all para resolver todas as promessas de uma vez
+  Promise.all(genreRequests)
+    .then(responses => {
+      // Combina os nomes de todos os gêneros recebidos
+      genres.value = responses.map(response => response.data.name).join(', ');
+    })
+    .catch(error => {
+      console.error('Erro ao buscar os gêneros:', error.message);
+    });
+} else {
+  // Caso haja apenas um gênero, faz apenas uma requisição
+  axios.get(`http://127.0.0.1:8000/api/v1/genre/${book.genre}`, {
+    headers: {
+      'Authorization': `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
+    }
+  })
+    .then(response => {
+      genres.value = response.data.name;
+    })
+    .catch(error => {
+      console.error('Erro ao buscar o gênero:', error.message);
+    });
+}
     })
     .catch(error => {
       console.error('Erro ao carregar o livro:', error.message);
     });
-
-
 });
-
-// const showAddGenreAlert = () => {
-//   Swal.fire({
-//     title: 'Adicionar Novo Gênero',
-//     input: 'text',
-//     inputLabel: 'Nome do Gênero',
-//     inputPlaceholder: 'Digite o nome do novo gênero',
-//     showCancelButton: true,
-//     confirmButtonText: 'Criar',
-//     cancelButtonText: 'Cancelar',
-//     inputValidator: (value) => {
-//       if (!value) {
-//         return 'Você precisa inserir um nome!';
-//       }
-//     }
-//   }).then((result) => {
-//     if (result.isConfirmed) {
-//       const newGenreName = result.value;
-//       addNewGenre(newGenreName);
-//     }
-//   });
-// };
-
-// const addNewGenre = (genreName) => {
-//   axios.post('http://127.0.0.1:8000/api/v1/genre', {
-//     name: genreName
-//   }, {
-//     headers: {
-//       'Authorization': `Bearer ${accessToken}`,
-//       'Content-Type': 'application/json'
-//     }
-//   })
-//     .then(response => {
-//       genres.value.push(response.data); // Atualiza a lista de gêneros localmente
-//       Swal.fire(
-//         'Sucesso!',
-//         `O gênero "${genreName}" foi criado com sucesso.`,
-//         'success'
-//       );
-//     })
-//     .catch(error => {
-//       Swal.fire(
-//         'Erro!',
-//         'Ocorreu um erro ao criar o gênero.',
-//         'error'
-//       );
-//       console.error('Erro ao criar o gênero:', error.message);
-//     });
-// };
 
 const deleteBookInstance = (bookinstanceID) => {
   const accessToken = localStorage.getItem('access_token');
