@@ -35,7 +35,11 @@
         <strong> imprimir: </strong> {{ bookinstance.imprint }}, <strong> devido de volta:
         </strong>{{ bookinstance.due_back }}, <div v-if="bookinstance.status.length > 0"><strong> status: </strong>{{
           bookinstance.status }} ,</div>
-        <div v-if="user.length > 0 && user"> <strong> mutuario: </strong>{{ user }}</div>
+        <!-- <div > <strong> mutuario: </strong>{{ users }} </div> -->
+        <div v-if="bookinstance.userDetails">
+          <strong>Mutuário:</strong>
+          <span >{{ bookinstance.userDetails.username }}</span>
+        </div>
         <h1 style="padding: 20px;"></h1>
         <table class="table card-table table-vcenter">
           <tr>
@@ -81,7 +85,8 @@ const route = useRoute();
 const bookId = route.params.id;
 const booksinstances = ref([]);
 const accessToken = localStorage.getItem('access_token');
-const user = ref([]);
+const users = ref([]);
+
 onMounted(() => {
   const accessToken = localStorage.getItem('access_token');
   const selectAuthor = ref(0);
@@ -98,10 +103,10 @@ onMounted(() => {
       localStorage.setItem('bookID', book.id);
       booksinstances.value = book.bookinstance_set;
       booksinstances.value.forEach(instance => {
-        if (instance.borrower) {
+        if (instance.borrower != null) {
           // Faz uma cópia do borrower para evitar possíveis problemas com referência
           const borrowerId = instance.borrower;
-          console.log("id",borrowerId)
+          console.log("id", borrowerId)
           axios.get(`http://127.0.0.1:8000/api/v1/user/${borrowerId}`, {
             headers: {
               'Authorization': `Bearer ${accessToken}`,  // Adiciona o token no cabeçalho
@@ -110,7 +115,9 @@ onMounted(() => {
           })
             .then(response => {
               // Atualiza o campo 'user' apenas para a instância específica
-              user.value = response.data.username
+              console.log(response.data)
+              alert(response.data)
+              instance.userDetails = response.data
               console.log(`Borrower ID: ${borrowerId}, User: ${instance.user}`);
             })
             .catch(error => {
@@ -162,7 +169,6 @@ onMounted(() => {
       dados.value.isbn = book.isbn;
       selectAuthor.value = book.author;
       dados.value.genre = book.genre;
-      console.log(book.genre)
       axios.get(`http://127.0.0.1:8000/api/v1/author/${selectAuthor.value}`, {
         headers: {
           'Authorization': `Bearer ${accessToken}`,  // Adiciona o token no cabeçalho

@@ -52,6 +52,10 @@
                     </tr>
                 </tbody>
             </table>
+            <div style="text-align:center; margin-top: 20px;">
+                <h3>Instâncias de Livros Disponiveis</h3>
+                <p><strong>Disponíveis:</strong> {{ statusCounts[book.id]?.available || 0  }}</p>
+            </div> 
         </div>
     </div>
 </template>
@@ -64,6 +68,8 @@ import Swal from 'sweetalert2'
 const books = ref([])
 const accessToken = localStorage.getItem('access_token');
 const genres = ref([])// Primeiro, busque os livros
+const booksinstances = ref([]);
+const statusCounts = ref([]);
 
 const fetchAuthors = () => {
     axios.get('http://127.0.0.1:8000/api/v1/books', {
@@ -74,6 +80,25 @@ const fetchAuthors = () => {
     })
         .then(response => {
             books.value = response.data;
+            books.value.forEach(book => {
+                const statusCounter = {
+                    available: 0, // Começa com zero instâncias disponíveis
+                };
+
+                // Verifica se o livro tem instâncias e conta os status
+                if (book.bookinstance_set) {
+                    book.bookinstance_set.forEach(instance => {
+                        if (instance.status === 'a') { // 'a' para disponível (available)
+                            statusCounter.available += 1;
+                        }
+                    });
+                }
+
+                // Armazena o statusCounter para o livro atual usando o ID do livro
+                statusCounts.value[book.id] = statusCounter;
+            });
+
+                 // Atualize o statusCount com os valores calculados
 
             // Agora, crie uma lista de promessas para buscar os autores de cada livro
             const authorPromises = books.value.map(book => {
