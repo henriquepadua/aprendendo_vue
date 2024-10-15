@@ -70,7 +70,7 @@ const bookInstanceId = route.params.id;
 const users = ref([]);
 
 onMounted(() => {
-    axios.get('http://localhost:8000/api/v1/user', {
+    axios.get('http://localhost:8000/api/v1/usersborrowed', {
         headers: {
             'Authorization': `Bearer ${accessToken}`,
             'Content-Type': 'application/json'

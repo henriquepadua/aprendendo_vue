@@ -60,6 +60,7 @@ export default {
 
                 localStorage.setItem('access_token', data.access);
                 localStorage.setItem('refresh_token', data.refresh);
+                localStorage.setItem('username', this.username); // Aqui estamos salvando o username no localStorage
 
                 this.$router.push("/").then(() => {
                     // Recarrega a página após a navegação ser concluída

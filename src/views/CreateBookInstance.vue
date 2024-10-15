@@ -34,7 +34,7 @@ const bookdetaliId = localStorage.getItem('bookID');
 const dados = ref({
   imprint: '',
   due_back: '',
-  status: '',
+  status: 'a', // Definindo o status como 'Available'
   borrower: '',
   book: bookdetaliId
 });

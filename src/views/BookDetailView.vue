@@ -33,9 +33,8 @@
       <h4 style="padding:10px;">Copias</h4>
       <div v-for="bookinstance in booksinstances" :key="bookinstance.id">
         <strong> imprimir: </strong> {{ bookinstance.imprint }}, <strong> devido de volta:
-        </strong>{{ bookinstance.due_back }}, <div v-if="bookinstance.status.length > 0"><strong> status: </strong>{{
+        </strong>{{ bookinstance.due_back }} <div v-if="bookinstance.status.length > 0">, <strong> status: </strong>{{
           bookinstance.status }} ,</div>
-        <!-- <div > <strong> mutuario: </strong>{{ users }} </div> -->
         <div v-if="bookinstance.userDetails">
           <strong>Mutuário:</strong>
           <span >{{ bookinstance.userDetails.username }}</span>
@@ -107,7 +106,7 @@ onMounted(() => {
           // Faz uma cópia do borrower para evitar possíveis problemas com referência
           const borrowerId = instance.borrower;
           console.log("id", borrowerId)
-          axios.get(`http://127.0.0.1:8000/api/v1/user/${borrowerId}`, {
+          axios.get(`http://localhost:8000/api/v1/users/${borrowerId}`, {
             headers: {
               'Authorization': `Bearer ${accessToken}`,  // Adiciona o token no cabeçalho
               'Content-Type': 'application/json'   // Certifica-se que o tipo de conteúdo é JSON
@@ -116,7 +115,6 @@ onMounted(() => {
             .then(response => {
               // Atualiza o campo 'user' apenas para a instância específica
               console.log(response.data)
-              alert(response.data)
               instance.userDetails = response.data
               console.log(`Borrower ID: ${borrowerId}, User: ${instance.user}`);
             })
@@ -126,44 +124,7 @@ onMounted(() => {
         } else {
           console.log(`A instância ${instance.id} não possui um borrower definido.`);
         }
-      });
-
-      // booksinstances.value.forEach(instance => {
-      //   if (instance.borrower) {
-      //     axios.get(`http://127.0.0.1:8000/api/v1/user/${instance.borrower}`, {
-      //       headers: {
-      //         'Authorization': `Bearer ${accessToken}`,  // Adiciona o token no cabeçalho
-      //         'Content-Type': 'application/json'   // Certifica-se que o tipo de conteúdo é JSON
-      //       }
-      //     })
-      //       .then(response => {
-      //         user.value = response.data.username;  // Salva o nome de usuário na instância específica
-      //         console.log(instance.user);
-      //       })
-      //       .catch(error => {
-      //         console.error(`Erro ao buscar usuário para borrower ${instance.borrower}:`, error.message);
-      //       });
-      //   } else {
-      //     console.log(`A instância ${instance.id} não possui um borrower definido.`);
-      //   }
-      // });
-      // if(booksinstances.value.length > 0 ){
-      //   if(booksinstances.value[0].borrower != null){
-      //   axios.get(`http://127.0.0.1:8000/api/v1/user/${booksinstances.value[0].borrower}`, {
-      //     headers: {
-      //       'Authorization': `Bearer ${accessToken}`,  // Adiciona o token no cabeçalho
-      //       'Content-Type': 'application/json'   // Certifica-se que o tipo de conteúdo é JSON
-      //     }
-      //   })
-      //     .then(response => {
-      //       user.value = response.data.username;
-      //       console.log(user.value)
-      //     })
-      //     .catch(error => {
-      //       console.error(error.message);
-      //     });
-      //   }
-      // }    
+      });  
       dados.value.title = book.title;
       dados.value.summary = book.summary;
       dados.value.isbn = book.isbn;
