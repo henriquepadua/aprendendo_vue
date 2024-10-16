@@ -8,10 +8,6 @@
     <h1 id="Form">Criar nova instância de livro</h1>
     <form @submit.prevent="createBookInstance">
       <div>
-        <label for="due_back">Prazo de entrega:</label>
-        <input v-model="dados.due_back" type="date" id="due_back" required>
-      </div>
-      <div>
         <label for="imprint">Imprimir:</label>
         <input v-model="dados.imprint" id="imprint" required>
       </div>
@@ -33,7 +29,7 @@ const bookdetaliId = localStorage.getItem('bookID');
 
 const dados = ref({
   imprint: '',
-  due_back: '',
+  due_back: null,
   status: 'a', // Definindo o status como 'Available'
   borrower: '',
   book: bookdetaliId
@@ -45,7 +41,7 @@ const router = useRouter();
 const users = ref([]);
 const accessToken = localStorage.getItem('access_token');
 
-onMounted(() => {    
+onMounted(() => {
 axios.get('http://localhost:8000/api/v1/user', {
         headers: {
             'Authorization': `Bearer ${accessToken}`,
@@ -59,6 +55,7 @@ axios.get('http://localhost:8000/api/v1/user', {
     console.error(error.message)
   });
 })
+
 const createBookInstance = () => {
   const bookdetaliId = localStorage.getItem('bookID');
   

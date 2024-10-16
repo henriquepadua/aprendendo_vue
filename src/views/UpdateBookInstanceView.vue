@@ -10,10 +10,6 @@
                 <input v-model="bookInstance.imprint" id="imprint" required>
             </div>
             <div>
-                <label for="Due_back">Prazo de volta:</label>
-                <input type="date" v-model="bookInstance.due_back" id="due_back" required>
-            </div>
-            <div>
                 <label for="Status">Status:</label>
                 <select v-model="bookInstance.status" id="status" required>
                     <option disabled value="">Selecionar status</option>
@@ -24,6 +20,10 @@
                 </select>
             </div>
             <div v-if="bookInstance.status === 'o' || bookInstance.status === 'r'">
+                <div>
+                    <label for="Due_back">Prazo de volta:</label>
+                    <input type="date" v-model="bookInstance.due_back" id="due_back" required>
+                </div>
                 <label for="borrower">Receberá o empréstimo:</label>
                 <select v-model="bookInstance.borrower" id="borrower" required>
                     <option disabled value="">Select Users for Borrower</option>
@@ -33,10 +33,6 @@
                     </option>
                 </select>
             </div>
-            <!-- <div>
-                <label for="Borrower">Borrower:</label>
-                <input v-model="bookInstance.borrower" id="borrower">
-            </div> -->
 
             <button type="submit">Atualizar Instância do Livro</button>
         </form>
@@ -76,14 +72,14 @@ onMounted(() => {
             'Content-Type': 'application/json'
         }
     })
-    .then(response => {
+        .then(response => {
 
-        users.value = response.data
+            users.value = response.data
 
-    })
-    .catch(error => {
-        console.error(error.message)
-    });
+        })
+        .catch(error => {
+            console.error(error.message)
+        });
 
     axios.get(`http://127.0.0.1:8000/api/v1/bookinstance/${bookInstanceId}`, {
         headers: {
@@ -100,7 +96,7 @@ onMounted(() => {
 });
 
 console.log("Book:" + bookInstance.book)
-const updateBookInstance = (bookId) => {
+const updateBookInstance = () => {
     const bookdetaliId = localStorage.getItem('bookID');
 
     axios.put(`http://127.0.0.1:8000/api/v1/bookinstance/${bookInstanceId}`, bookInstance.value, {

@@ -32,25 +32,35 @@
       </router-link>
       <h4 style="padding:10px;">Copias</h4>
       <div v-for="bookinstance in booksinstances" :key="bookinstance.id">
-        <strong> imprimir: </strong> {{ bookinstance.imprint }}, <strong> devido de volta:
-        </strong>{{ bookinstance.due_back }} <div v-if="bookinstance.status.length > 0">, <strong> status: </strong>{{
-          bookinstance.status }} ,</div>
-        <div v-if="bookinstance.userDetails">
-          <strong>Mutuário:</strong>
-          <span >{{ bookinstance.userDetails.username }}</span>
+        <strong> imprimir: </strong> {{ bookinstance.imprint }}
+        <div v-if="bookinstance.status.length > 0">, <strong> status: </strong> <span
+            v-if="bookinstance.status === 'm'">Manutenção</span>
+          <span v-else-if="bookinstance.status === 'o'">Emprestado</span>
+          <span v-else-if="bookinstance.status === 'a'">Disponivel</span>
+          <span v-else-if="bookinstance.status === 'r'">Reservado</span>
+        </div>
+        <div v-if="bookinstance.status === 'o' || bookinstance.status === 'r'">
+          <div v-if="bookinstance.due_back != null">, <strong>
+            devido de volta:
+          </strong>{{ bookinstance.due_back }} </div>
+          <div v-if="bookinstance.userDetails">
+            <strong>,Mutuário:</strong>
+            <span>{{ bookinstance.userDetails.username }}</span>
+          </div>
         </div>
         <h1 style="padding: 20px;"></h1>
         <table class="table card-table table-vcenter">
           <tr>
             <td class="text-nowrap">
-              <router-link :to="{ name: 'UpdateBookDetail', params: { id: bookinstance.id } }" class="btn btn-primary">
+              <router-link v-if="bookinstance && bookinstance.id"
+                :to="{ name: 'UpdateBookDetail', params: { id: bookinstance.id } }" class="btn btn-primary">
                 <strong>Atualizar BookInstance</strong>
               </router-link>
             </td>
             <td class="text-nowrap">
               <form @submit.prevent="deleteBookInstance(bookinstance.id)">
                 <button type="submit" class="btn btn-danger">
-                  Excluir livro
+                  Excluir Instancia de Livro
                 </button>
               </form>
             </td>
@@ -59,7 +69,6 @@
         <h1 style="  padding: 20px;"></h1>
       </div>
     </div>
-
   </main>
 </template>
 
@@ -76,6 +85,7 @@ const dados = ref({
   genre: "",
   bookinstance_set: []
 });
+this
 
 const genres = ref([]);
 const authors = ref([]);
@@ -124,7 +134,7 @@ onMounted(() => {
         } else {
           console.log(`A instância ${instance.id} não possui um borrower definido.`);
         }
-      });  
+      });
       dados.value.title = book.title;
       dados.value.summary = book.summary;
       dados.value.isbn = book.isbn;
