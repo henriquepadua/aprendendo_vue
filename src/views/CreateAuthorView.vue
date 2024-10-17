@@ -71,6 +71,10 @@ const validateForm = () => {
   let valid = true;
 
   // Verificando se os campos estão vazios
+  if (!dados.value.first_name) {
+    errors.value.first_name = 'O nome é requerido.';
+    valid = false;
+  }
   if (!dados.value.last_name) {
     errors.value.last_name = 'O sobrenome é requerido.';
     valid = false;
@@ -105,7 +109,24 @@ const createAuthor = () => {
         router.push('/authors'); // Substitua '/authors' pelo caminho correto da sua rota
       })
       .catch(error => {
-        
+        if (error.response && error.response.data) {
+          const responseErrors = error.response.data;
+          // Mapear os erros do backend para o frontend
+          if (responseErrors.first_name) {
+            errors.value.first_name = responseErrors.first_name[0]; // Exibe o erro do backend
+          }
+          if (responseErrors.last_name) {
+            errors.value.last_name = responseErrors.last_name[0];
+          }
+          if (responseErrors.date_of_birth) {
+            errors.value.date_of_birth = responseErrors.date_of_birth[0];
+          }
+          if (responseErrors.date_of_death) {
+            errors.value.date_of_death = responseErrors.date_of_death[0];
+          }
+        } else {
+          console.error('Erro ao criar o autor:', error);
+        }
         console.error('Erro ao criar o autor:', error);
       });
   }
